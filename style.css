@@ -1,0 +1,94 @@
+body {
+    font-family: 'Arial', sans-serif;
+    direction: rtl;
+    text-align: right;
+    margin: 0;
+    padding: 0;
+    /* يمكنك استبدال الرابط باسم الصورة التي تريد استخدامها */
+    background-image: url('background.jpeg'); 
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed; 
+    color: #333;
+}
+
+/* طبقة شفافة فوق الخلفية لضمان قراءة النصوص */
+.container {
+    background-color: rgba(255, 255, 255, 0.9); 
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.order-status-box {
+    padding: 15px;
+    margin-bottom: 25px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #e9f7ef;
+    text-align: center;
+}
+
+h2 {
+    color: #007bff;
+    margin-top: 0;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="tel"],
+textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    resize: vertical;
+}
+
+textarea {
+    min-height: 100px;
+}
+
+button[type="submit"] {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button[type="submit"]:hover {
+    background-color: #1e7e34;
+}
+/* هذا الكود يبدأ في نهاية ملف style.css */
+
+/* سيتم تطبيق هذه القواعد فقط إذا كانت الشاشة أصغر من 600 بكسل (أي الهواتف) */
+@media (max-width: 600px) {
+    /* نجعل حاوية المحتوى تأخذ عرضاً أكبر لتبدو أفضل على الهاتف */
+    .container {
+        width: 95%; 
+        margin: 20px auto;
+        padding: 15px;
+    }
+
+    /* تصغير حجم الخط إذا لزم الأمر */
+    h2 {
+        font-size: 1.5em;
+    }
+}

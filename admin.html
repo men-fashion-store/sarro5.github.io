@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم الطلبات - المدير</title>
+    <link rel="stylesheet" href="style-admin.css"> 
+</head>
+<body>
+    <div class="container">
+        <h1>لوحة تحكم طلبات التوصيل</h1>
+        <p>الطلبات الجديدة (قيد المراجعة/التجهيز)</p>
+        
+        <div id="orders-list">
+            <p style="text-align: center;">جاري تحميل الطلبات...</p>
+        </div>
+
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+    
+    <script src="script-admin.js"></script> 
+</body>
+</html>
