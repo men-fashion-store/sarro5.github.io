@@ -39,7 +39,7 @@ function fetchOrders() {
 
                 card.innerHTML = `
                     <div class="order-details">
-                        <h4>رقم الطلب: ${orderId.substring(0, 8)}</h4>
+<h4>رقم الطلب:                         ${orderId}</h4>
                         <p><strong>الهاتف:</strong> ${order.phone}</p>
                         <p><strong>التفاصيل:</strong> ${order.details}</p>
                         <p><strong>الحالة:</strong> <span class="current-status">${order.status}</span></p>

@@ -8,32 +8,58 @@
 </head>
 <body>
     <div class="container">
-        
+        <!-- عرض حالة الطلب -->
         <div id="status-display" class="order-status-box">
             <h2 id="order-number-display">رقم الطلب: ---</h2>
             <p id="current-status">اكتب طلبك بالأسفل للحصول على رقم التتبع.</p>
         </div>
 
+        <!-- نموذج الطلب -->
         <form id="order-form" class="order-form">
             <h2>اطلب الآن!</h2>
+
+            <div class="input-group">
+                <label for="name">الاسم ثلاثي:</label>
+                <textarea id="name" name="name" ></textarea>
+            </div>
             
             <div class="input-group">
-                <label for="order-details">تفاصيل الطلب (العنوان، الأصناف):</label>
-                <textarea id="order-details" name="orderDetails" required></textarea>
+                <label for="order-details">تفاصيل الطلب (الأصناف):</label>
+                <textarea id="order-details" name="orderDetails" required placeholder="اكتب تفاصيل طلبك هنا..."></textarea>
+            </div>
+            
+            <div class="input-group">
+                <label for="address">العنوان:</label>
+                <textarea id="address" name="address" required placeholder="اكتب عنوان التوصيل الكامل (المنطقة، الشارع، رقم المبنى، الشقة...)" rows="3"></textarea>
             </div>
             
             <div class="input-group">
                 <label for="phone-number">رقم الهاتف:</label>
-                <input type="tel" id="phone-number" name="phoneNumber" required>
+                <input type="tel" id="phone-number" name="phoneNumber" required placeholder="مثال: 01000544420 (11 رقماً)">
             </div>
             
             <button type="submit">إرسال الطلب</button>
         </form>
+
+        <hr style="margin: 30px 0; border: 1px solid #ddd;">
+
+        <!-- قسم التحقق من الطلب -->
+        <div class="check-order-section">
+            <h2>🔍 تحقق من حالة طلبك</h2>
+            <div class="input-group">
+                <label for="track-order-number">أدخل رقم الطلب:</label>
+                <input type="text" id="track-order-number" placeholder="أدخل رقم التتبع ( رقم الهاتف الخاص بيك )" maxlength="11">
+                <button type="button" id="track-order-btn" class="track-btn">تحقق من الطلب</button>
+            </div>
+            <div id="track-result" style="display: none; margin-top: 15px; padding: 15px; border-radius: 8px;"></div>
+        </div>
     </div>
 
+    <!-- سكريبتات Firebase -->
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
     
-    <script src="script.js"></script> 
+    <!-- سكريبت التطبيق الرئيسي -->
+    <script src="script.js"></script>
 </body>
 </html>
