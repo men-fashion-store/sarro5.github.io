@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>خدمة توصيل الطلبات</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        
+        <div id="status-display" class="order-status-box">
+            <h2 id="order-number-display">رقم الطلب: ---</h2>
+            <p id="current-status">اكتب طلبك بالأسفل للحصول على رقم التتبع.</p>
+        </div>
+
+        <form id="order-form" class="order-form">
+            <h2>اطلب الآن!</h2>
+            
+            <div class="input-group">
+                <label for="order-details">تفاصيل الطلب (العنوان، الأصناف):</label>
+                <textarea id="order-details" name="orderDetails" required></textarea>
+            </div>
+            
+            <div class="input-group">
+                <label for="phone-number">رقم الهاتف:</label>
+                <input type="tel" id="phone-number" name="phoneNumber" required>
+            </div>
+            
+            <button type="submit">إرسال الطلب</button>
+        </form>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+    
+    <script src="script.js"></script> 
+</body>
+</html>
