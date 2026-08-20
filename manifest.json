@@ -1,0 +1,21 @@
+{
+  "name": "الصاروووخ | طلبات السوق",
+  "short_name": "الصاروووخ",
+  "description": "منصة طلبات السوبرماركت والسوق والتوصيل",
+  "lang": "ar",
+  "dir": "rtl",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#f7f8f5",
+  "theme_color": "#0f766e",
+  "icons": [
+    {
+      "src": "Orange Modern Food Delivery Service Instagram Post.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

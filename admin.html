@@ -3,235 +3,2076 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة تحكم الطلبات</title>
+    <meta name="theme-color" content="#1e1e2d">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+            <title>لوحة التحكم | الصاروووخ - إدارة السوق والتوصيل</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-orange: #ff6b35;
+            --primary-dark: #df6a1f;
+            --secondary-orange: #ffb347;
+            --sidebar-bg: #1e1e2d;
+            --sidebar-hover: #2a2a3d;
+            --light-bg: #f5f6fa;
+            --card-bg: #ffffff;
+            --success: #10b981;
+            --success-light: #d1fae5;
+            --danger: #ef4444;
+            --danger-light: #fee2e2;
+            --warning: #f59e0b;
+            --warning-light: #fef3c7;
+            --info: #3b82f6;
+            --info-light: #dbeafe;
+            --dark-text: #1a1a2e;
+            --medium-text: #6b7280;
+            --border: #e5e7eb;
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+            --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+            --gradient-orange: linear-gradient(135deg, #ff6b35 0%, #ff8c42 50%, #ffb347 100%);
+        }
+
+        * { box-sizing: border-box; }
+
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background: #f5f5f5;
+            margin: 0;
+            font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-bg);
+            color: var(--dark-text);
+            height: 100vh;
+            overflow: hidden;
         }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+
+        .app-container {
+            display: flex;
+            height: 100vh;
         }
-        h1 {
-            color: #333;
-            text-align: center;
-        }
-        .order {
-            background: #fff;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            padding: 15px;
-            margin: 10px 0;
-        }
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: #666;
-        }
-        .error {
-            text-align: center;
-            padding: 40px;
-            color: red;
-            background: #ffe6e6;
-            border-radius: 8px;
-        }
-        .btn {
-            background: #3498db;
+
+        /* ========== الشريط الجانبي ========== */
+        .sidebar {
+            width: 270px;
+            background: var(--sidebar-bg);
             color: white;
-            padding: 10px 20px;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            box-shadow: -4px 0 20px rgba(0,0,0,0.1);
+        }
+
+        .sidebar-header {
+            padding: 28px 24px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-orange);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            box-shadow: 0 4px 16px rgba(255,107,53,0.4);
+        }
+
+        .brand-text h2 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 800;
+            background: var(--gradient-orange);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .brand-text p {
+            margin: 2px 0 0 0;
+            font-size: 12px;
+            color: var(--secondary-orange);
+            font-weight: 700;
+        }
+
+        .sidebar-nav {
+            flex-grow: 1;
+            padding: 20px 14px;
+            overflow-y: auto;
+        }
+
+        .nav-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: rgba(255,255,255,0.35);
+            font-weight: 700;
+            padding: 12px 12px 8px;
+        }
+
+        .tab-btn {
+            background: none;
             border: none;
-            border-radius: 5px;
+            color: rgba(255,255,255,0.7);
+            width: 100%;
+            padding: 13px 16px;
+            text-align: right;
+            font-size: 15px;
             cursor: pointer;
-            margin: 5px;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            font-family: inherit;
+        }
+
+        .tab-btn .nav-icon {
+            font-size: 18px;
+            width: 28px;
+            text-align: center;
+        }
+
+        .tab-btn:hover {
+            background: var(--sidebar-hover);
+            color: white;
+        }
+
+        .tab-btn.active {
+            background: var(--gradient-orange);
+            color: white;
+            box-shadow: 0 4px 16px rgba(255,107,53,0.35);
+        }
+
+        .sidebar-footer {
+            padding: 18px 20px;
+            border-top: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .admin-card {
+            background: var(--sidebar-hover);
+            border-radius: 14px;
+            padding: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .admin-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: var(--gradient-orange);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 16px;
+        }
+
+        .admin-info h4 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .admin-info p {
+            margin: 2px 0 0 0;
+            font-size: 11px;
+            color: rgba(255,255,255,0.5);
+        }
+
+        /* ========== منطقة المحتوى الرئيسية ========== */
+        .content-area {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* ========== الهيدر العلوي ========== */
+        .top-header {
+            background: white;
+            padding: 18px 32px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px;
+            box-shadow: var(--shadow-sm);
+            z-index: 10;
+        }
+
+        .header-right {
+            flex-grow: 1;
+            max-width: 600px;
+        }
+
+        .page-title h1 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        .page-title p {
+            margin: 2px 0 0 0;
+            font-size: 13px;
+            color: var(--medium-text);
+        }
+
+        /* ========== شريط البحث ========== */
+        .global-search-wrap {
+            position: relative;
+        }
+
+        .global-search-wrap .search-icon {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--medium-text);
+            font-size: 18px;
+            pointer-events: none;
+        }
+
+        .global-search-wrap .clear-btn {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--border);
+            border: none;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--medium-text);
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .global-search-wrap .clear-btn.visible { display: flex; }
+
+        .global-search {
+            width: 100%;
+            padding: 12px 50px;
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            font-size: 15px;
+            font-family: inherit;
+            background: #f9fafb;
+            transition: all 0.2s ease;
+        }
+
+        .global-search:focus {
+            border-color: var(--primary-orange);
+            outline: none;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(255,107,53,0.1);
+        }
+
+        .global-search::placeholder { color: #9ca3af; }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .header-action {
+            width: 44px;
+            height: 44px;
+            background: #f9fafb;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .header-action:hover {
+            background: var(--primary-orange);
+            border-color: var(--primary-orange);
+            color: white;
+        }
+
+        /* ========== منطقة السكرول ========== */
+        .content-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 28px 32px;
+        }
+
+        .section { display: none; animation: fadeIn 0.3s ease; }
+        .section.active { display: block; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* ========== بطاقات الإحصائيات ========== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+            margin-bottom: 28px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 18px;
+            padding: 22px;
+            box-shadow: var(--shadow-sm);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            opacity: 0.08;
+            transform: translate(30%, -30%);
+        }
+
+        .stat-card.orders::before { background: var(--primary-orange); }
+        .stat-card.revenue::before { background: var(--success); }
+        .stat-card.drivers::before { background: var(--info); }
+        .stat-card.rest::before { background: var(--warning); }
+
+        .stat-icon {
+            width: 52px;
+            height: 52px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-bottom: 14px;
+        }
+
+        .stat-card.orders .stat-icon { background: #ffedd5; color: var(--primary-dark); }
+        .stat-card.revenue .stat-icon { background: var(--success-light); color: var(--success); }
+        .stat-card.drivers .stat-icon { background: var(--info-light); color: var(--info); }
+        .stat-card.rest .stat-icon { background: var(--warning-light); color: var(--warning); }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--medium-text);
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .stat-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--dark-text);
+            line-height: 1.1;
+        }
+
+        .stat-trend {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+
+        .stat-trend.up { background: var(--success-light); color: var(--success); }
+        .stat-trend.stable { background: var(--info-light); color: var(--info); }
+
+        /* ========== البطاقات والأقسام ========== */
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .section-header h2 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        .section-header p {
+            margin: 4px 0 0 0;
+            color: var(--medium-text);
+            font-size: 13px;
+        }
+
+        .card {
+            background: white;
+            padding: 24px;
+            border-radius: 18px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 22px;
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 0 20px 0;
+            font-size: 18px;
+            font-weight: 800;
+        }
+
+        .card-title-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: var(--gradient-orange);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 22px;
+        }
+
+        /* ========== النماذج ========== */
+        .form-group { margin-bottom: 16px; }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 7px;
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--dark-text);
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            box-sizing: border-box;
+            font-family: inherit;
+            font-size: 15px;
+            background: #f9fafb;
+            transition: all 0.2s ease;
+            color: var(--dark-text);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary-orange);
+            outline: none;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(255,107,53,0.1);
+        }
+
+        .row-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        /* ========== الأزرار ========== */
+        .btn {
+            border: none;
+            padding: 12px 22px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--gradient-orange);
+            color: white;
+            box-shadow: 0 4px 16px rgba(255,107,53,0.35);
+        }
+
+        .btn-primary:active { transform: scale(0.97); }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+            box-shadow: 0 4px 12px rgba(16,185,129,0.3);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+            box-shadow: 0 4px 12px rgba(239,68,68,0.3);
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: white;
+            box-shadow: 0 4px 12px rgba(245,158,11,0.3);
+        }
+
+        .btn-info {
+            background: var(--info);
+            color: white;
+            box-shadow: 0 4px 12px rgba(59,130,246,0.3);
+        }
+
+        .btn-sm {
+            padding: 7px 14px;
+            font-size: 13px;
+            border-radius: 9px;
+        }
+
+        /* ========== الجداول ========== */
+        .table-wrap {
+            overflow-x: auto;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        thead {
+            background: #f9fafb;
+        }
+
+        th {
+            padding: 15px 18px;
+            text-align: right;
+            font-weight: 800;
+            font-size: 13px;
+            color: var(--medium-text);
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            border-bottom: 2px solid var(--border);
+            white-space: nowrap;
+        }
+
+        td {
+            padding: 15px 18px;
+            text-align: right;
+            border-bottom: 1px solid #f3f4f6;
+            color: var(--dark-text);
+        }
+
+        tbody tr {
+            transition: background 0.15s ease;
+        }
+
+        tbody tr:hover {
+            background: #fafafa;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .status-pending {
+            background: var(--warning-light);
+            color: var(--warning);
+        }
+
+        .status-active {
+            background: var(--success-light);
+            color: var(--success);
+        }
+
+        .status-onway {
+            background: var(--info-light);
+            color: var(--info);
+        }
+
+        .status-delivered {
+            background: #e5e7eb;
+            color: #6b7280;
+        }
+
+        .customer-cell {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .customer-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--gradient-orange);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .customer-meta h4 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .customer-meta p {
+            margin: 2px 0 0 0;
+            font-size: 12px;
+            color: var(--medium-text);
+        }
+
+        .price-cell {
+            font-weight: 800;
+            color: var(--primary-orange);
+            font-size: 15px;
+        }
+
+        .actions-cell {
+            white-space: nowrap;
+            display: flex;
+            gap: 6px;
+        }
+
+        /* ========== المودال ========== */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal-overlay.visible {
+            display: flex;
+        }
+
+        .modal-card {
+            background: white;
+            border-radius: 22px;
+            max-width: 520px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+            animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .modal-header {
+            padding: 22px 28px 18px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 800;
+        }
+
+        .close-modal {
+            background: #f3f4f6;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 18px;
+            color: var(--medium-text);
+            transition: all 0.2s ease;
+        }
+
+        .close-modal:hover { background: var(--danger); color: white; }
+
+        .modal-body {
+            padding: 24px 28px;
+        }
+
+        .modal-footer {
+            padding: 18px 28px 24px;
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            border-top: 1px solid var(--border);
+        }
+
+        .order-detail-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px dashed var(--border);
+        }
+
+        .order-detail-row:last-child { border-bottom: none; }
+
+        .order-detail-row .label {
+            color: var(--medium-text);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .order-detail-row .value {
+            font-weight: 700;
+            color: var(--dark-text);
+            font-size: 14px;
+        }
+
+        .items-list-box {
+            background: #f9fafb;
+            border-radius: 14px;
+            padding: 14px 18px;
+            margin-top: 12px;
+        }
+
+        .item-entry {
+            padding: 8px 0;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .item-entry:last-child { border-bottom: none; }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            padding-top: 14px;
+            margin-top: 8px;
+            border-top: 2px solid var(--primary-orange);
+        }
+
+        .total-row .label { font-size: 16px; font-weight: 700; }
+        .total-row .value { font-size: 20px; font-weight: 800; color: var(--success); }
+
+        /* ========== التبويبات (Tabs) داخل الطلبات ========== */
+        .orders-tabs {
+            display: flex;
+            gap: 8px;
+            padding: 6px;
+            background: #f3f4f6;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .order-tab-btn {
+            border: none;
+            background: transparent;
+            padding: 9px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 13px;
+            color: var(--medium-text);
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .order-tab-btn.active {
+            background: white;
+            color: var(--primary-orange);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .orders-count-badge {
+            display: inline-block;
+            background: var(--primary-orange);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 800;
+            margin-right: 5px;
+        }
+
+        /* ========== الإشعارات ========== */
+        .toast-container {
+            position: fixed;
+            top: 24px;
+            left: 24px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .toast {
+            background: white;
+            padding: 14px 20px;
+            border-radius: 14px;
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            max-width: 380px;
+            border-right: 5px solid;
+            animation: slideInLeft 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .toast.hide { animation: fadeOutRight 0.3s ease forwards; }
+        @keyframes fadeOutRight { to { opacity: 0; transform: translateX(20px); } }
+
+        .toast-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .toast.success { border-color: var(--success); }
+        .toast.success .toast-icon { background: var(--success-light); }
+        .toast.error { border-color: var(--danger); }
+        .toast.error .toast-icon { background: var(--danger-light); }
+        .toast.info { border-color: var(--info); }
+        .toast.info .toast-icon { background: var(--info-light); }
+
+        .toast-content { flex-grow: 1; }
+        .toast-title { font-weight: 800; font-size: 14px; margin: 0 0 2px 0; }
+        .toast-msg { font-size: 13px; color: var(--medium-text); margin: 0; }
+
+        /* ========== Mobile ========== */
+        @media (max-width: 900px) {
+            .sidebar {
+                position: fixed;
+                right: -280px;
+                top: 0;
+                bottom: 0;
+                z-index: 500;
+                transition: right 0.3s ease;
+            }
+            .sidebar.open { right: 0; }
+            .top-header { padding: 14px 18px; }
+            .content-scroll { padding: 20px 18px; }
+            .row-2 { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>لوحة تحكم الطلبات - جميع الطلبات</h1>
-        <button class="btn" onclick="loadOrders()">تحديث الطلبات</button>
-        <div id="orders-container">
-            <div class="loading">جاري تحميل الطلبات...</div>
+
+    <div class="toast-container" id="toast-container"></div>
+
+    <div class="app-container">
+        <!-- الشريط الجانبي -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <div class="brand-icon">🚀</div>
+                    <div class="brand-text">
+                        <h2>الصاروووخ</h2>
+                        <p>🏆 إدارة السوق والتوصيل</p>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-label">الرئيسية</div>
+                <button class="tab-btn active" onclick="window.openTab('orders-section', this)">
+                    <span class="nav-icon">📦</span>
+                    <span>إدارة الطلبات</span>
+                </button>
+                <button class="tab-btn" onclick="window.openTab('dashboard-section', this)">
+                    <span class="nav-icon">📊</span>
+                    <span>الإحصائيات</span>
+                </button>
+
+                <div class="nav-label">البيانات</div>
+                <button class="tab-btn" onclick="window.openTab('restaurants-section', this)">
+                    <span class="nav-icon">🍔</span>
+                    <span>المحلات والمنتجات</span>
+                </button>
+                <button class="tab-btn" onclick="window.openTab('drivers-section', this)">
+                    <span class="nav-icon">🛵</span>
+                    <span>إدارة الطيارين</span>
+                </button>
+                <button class="tab-btn" onclick="window.openTab('archive-section', this)">
+                    <span class="nav-icon">📁</span>
+                    <span>أرشيف الطلبات</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="admin-card">
+                    <div class="admin-avatar">م</div>
+                    <div class="admin-info">
+                        <h4>المدير العام</h4>
+                        <p>متصل الآن</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- منطقة المحتوى -->
+        <main class="content-area">
+            <!-- الهيدر العلوي -->
+            <header class="top-header">
+                <div class="page-title">
+                    <h1 id="current-page-title">إدارة الطلبات 📦</h1>
+                    <p id="current-page-sub">متابعة وتوجيه الطلبات الجديدة</p>
+                </div>
+
+                <div class="header-right">
+                    <div class="global-search-wrap">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="global-search" class="global-search" placeholder="بحث شامل: طلب، عميل، محل، كابتن، منتج..." oninput="handleGlobalSearch(this.value)">
+                        <button class="clear-btn" id="clear-global-search" onclick="clearGlobalSearch()">✕</button>
+                    </div>
+                </div>
+
+                <div class="header-left">
+                    <button class="header-action" title="تحديث البيانات" onclick="refreshAll()">🔄</button>
+                    <button class="header-action" title="الإعدادات" onclick="showToast('قريباً', 'قسم الإعدادات هيتوفر قريباً', 'info')">⚙️</button>
+                </div>
+            </header>
+
+            <!-- المنطقة القابلة للسكرول -->
+            <div class="content-scroll">
+
+                <!-- قسم الطلبات الحالية -->
+                <section id="orders-section" class="section active">
+
+                    <div class="stats-grid">
+                        <div class="stat-card orders">
+                            <div class="stat-icon">📦</div>
+                            <div class="stat-label">الطلبات الجديدة</div>
+                            <div class="stat-value" id="stat-pending">0</div>
+                            <div class="stat-trend stable">⏱️ قيد الانتظار</div>
+                        </div>
+                        <div class="stat-card drivers">
+                            <div class="stat-icon">🛵</div>
+                            <div class="stat-label">الطلبات مع الطيار</div>
+                            <div class="stat-value" id="stat-onway">0</div>
+                            <div class="stat-trend up">🚀 قيد التوصيل</div>
+                        </div>
+                        <div class="stat-card revenue">
+                            <div class="stat-icon">💰</div>
+                            <div class="stat-label">إيرادات اليوم</div>
+                            <div class="stat-value" id="stat-revenue">0</div>
+                            <div class="stat-trend up">📈 إجمالي</div>
+                        </div>
+                        <div class="stat-card rest">
+                            <div class="stat-icon">✅</div>
+                            <div class="stat-label">تم تسليمها</div>
+                            <div class="stat-value" id="stat-delivered">0</div>
+                            <div class="stat-trend stable">📁 اليوم</div>
+                        </div>
+                    </div>
+
+                    <div class="section-header">
+                        <div>
+                            <h2>الطلبات 📋</h2>
+                            <p>إدارة وتوجيه جميع الطلبات الواردة</p>
+                        </div>
+                    </div>
+
+                    <div class="card" style="padding: 16px;">
+                        <div class="orders-tabs">
+                            <button class="order-tab-btn active" data-order-filter="all" onclick="filterOrders('all', this)">
+                                <span class="orders-count-badge" id="tab-all-count">0</span> الكل
+                            </button>
+                            <button class="order-tab-btn" data-order-filter="pending" onclick="filterOrders('pending', this)">
+                                <span class="orders-count-badge" id="tab-pending-count" style="background:var(--warning)">0</span> قيد الانتظار
+                            </button>
+                            <button class="order-tab-btn" data-order-filter="on_the_way" onclick="filterOrders('on_the_way', this)">
+                                <span class="orders-count-badge" id="tab-onway-count" style="background:var(--info)">0</span> مع الطيار
+                            </button>
+                            <button class="order-tab-btn" data-order-filter="delivered" onclick="filterOrders('delivered', this)">
+                                <span class="orders-count-badge" id="tab-delivered-count">0</span> تم التسليم
+                            </button>
+                        </div>
+
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>رقم الطلب</th>
+                                        <th>العميل</th>
+                                        <th>تفاصيل</th>
+                                        <th>الحالة</th>
+                                        <th>الطيار</th>
+                                        <th>الإجمالي</th>
+                                        <th>الإجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="orders-table-body">
+                                    <!-- تُجلب من Firebase -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- قسم الإحصائيات -->
+                <section id="dashboard-section" class="section">
+                    <div class="section-header">
+                        <div>
+                            <h2>لوحة الإحصائيات 📊</h2>
+                            <p>نظرة شاملة على أداء النظام</p>
+                        </div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card orders">
+                            <div class="stat-icon">📦</div>
+                            <div class="stat-label">إجمالي الطلبات</div>
+                            <div class="stat-value" id="dash-total-orders">0</div>
+                            <div class="stat-trend up">📈 كل الوقت</div>
+                        </div>
+                        <div class="stat-card revenue">
+                            <div class="stat-icon">💰</div>
+                            <div class="stat-label">إجمالي الإيرادات</div>
+                            <div class="stat-value" id="dash-total-revenue">0</div>
+                            <div class="stat-trend up">📈 ج.م</div>
+                        </div>
+                        <div class="stat-card rest">
+                            <div class="stat-icon">🍔</div>
+                            <div class="stat-label">عدد المطاعم</div>
+                            <div class="stat-value" id="dash-rest-count">0</div>
+                            <div class="stat-trend stable">🍽️ نشط</div>
+                        </div>
+                        <div class="stat-card drivers">
+                            <div class="stat-icon">🛵</div>
+                            <div class="stat-label">عدد الطيارين</div>
+                            <div class="stat-value" id="dash-drivers-count">0</div>
+                            <div class="stat-trend stable">👥 مسجل</div>
+                        </div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card revenue">
+                            <div class="stat-icon">📅</div>
+                            <div class="stat-label">إيرادات اليوم</div>
+                            <div class="stat-value" id="dash-revenue-today">0 ج.م</div>
+                            <div class="stat-trend up">✅ الطلبات المسلّمة</div>
+                        </div>
+                        <div class="stat-card revenue">
+                            <div class="stat-icon">📊</div>
+                            <div class="stat-label">إيرادات الأسبوع</div>
+                            <div class="stat-value" id="dash-revenue-week">0 ج.م</div>
+                            <div class="stat-trend up">✅ الطلبات المسلّمة</div>
+                        </div>
+                        <div class="stat-card revenue">
+                            <div class="stat-icon">🗓️</div>
+                            <div class="stat-label">إيرادات الشهر</div>
+                            <div class="stat-value" id="dash-revenue-month">0 ج.م</div>
+                            <div class="stat-trend up">✅ الطلبات المسلّمة</div>
+                        </div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="card">
+                            <h3 class="card-title">
+                                <span class="card-title-icon">🍔</span>
+                                المطاعم المضافة حديثاً
+                            </h3>
+                            <div id="dash-recent-restaurants">
+                                <p style="color: var(--medium-text); text-align: center;">جاري التحميل...</p>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <h3 class="card-title">
+                                <span class="card-title-icon">🛵</span>
+                                الطيارين المسجلين
+                            </h3>
+                            <div id="dash-recent-drivers">
+                                <p style="color: var(--medium-text); text-align: center;">جاري التحميل...</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- قسم المطاعم والمنتجات -->
+                <section id="restaurants-section" class="section">
+                    <div class="section-header">
+                        <div>
+                            <h2>إدارة المحلات والمنتجات 🛒</h2>
+                            <p>أضف محلات السوق والمنتجات والأسعار من مكان واحد</p>
+                        </div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="card">
+                            <h3 class="card-title">
+                                <span class="card-title-icon">➕</span>
+                                إضافة محل جديد
+                            </h3>
+                            <div class="form-group">
+                                <label>اسم المحل أو المورد</label>
+                                <input type="text" id="rest-name" placeholder="مثال: سوبر ماركت الأمانة">
+                            </div>
+                            <div class="form-group">
+                                <label>صورة المطعم من الجهاز</label>
+                                <input type="file" id="rest-img" accept="image/*">
+                            </div>
+                            <button class="btn btn-primary" onclick="window.addRestaurant()" style="width: 100%;">💾 حفظ المحل</button>
+                        </div>
+
+                        <div class="card">
+                            <h3 class="card-title">
+                                <span class="card-title-icon">🥘</span>
+                                إضافة منتج جديد
+                            </h3>
+                            <div class="form-group">
+                                <label>اختر المحل أو المورد</label>
+                                <select id="rest-select"><option value="">جاري تحميل المطاعم...</option></select>
+                            </div>
+                            <div class="row-2">
+                                <div class="form-group">
+                                    <label>اسم المنتج</label>
+                                    <input type="text" id="prod-name" placeholder="مثال: لبن كامل الدسم">
+                                </div>
+                                <div class="form-group">
+                                    <label>السعر (ج.م)</label>
+                                    <input type="number" id="prod-price" placeholder="120">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>صورة المنتج من الجهاز</label>
+                                <input type="file" id="prod-img" accept="image/*">
+                            </div>
+                            <button class="btn btn-primary" onclick="window.addProduct()" style="width: 100%;">💾 حفظ المنتج</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">
+                            <span class="card-title-icon">💵</span>
+                            إدارة وتحديث أسعار المنتجات
+                        </h3>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>المنتج</th>
+                                        <th>المحل</th>
+                                        <th>السعر الحالي</th>
+                                        <th>السعر الجديد</th>
+                                        <th>إجراء</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="products-table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">
+                            <span class="card-title-icon">📋</span>
+                            قائمة المحلات المسجلة
+                        </h3>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>اسم المحل</th>
+                                        <th>عدد المنتجات</th>
+                                        <th>حذف</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="restaurants-table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- قسم الطيارين -->
+                <section id="drivers-section" class="section">
+                    <div class="section-header">
+                        <div>
+                            <h2>إدارة الطيارين 🛵</h2>
+                            <p>إضافة وتعديل بيانات طياري الدليفري</p>
+                        </div>
+                    </div>
+
+                    <div class="grid-2">
+                        <div class="card">
+                            <h3 class="card-title">
+                                <span class="card-title-icon">➕</span>
+                                تسجيل طيار جديد
+                            </h3>
+                            <div class="form-group">
+                                <label>اسم الطيار كاملاً</label>
+                                <input type="text" id="driver-name" placeholder="مثال: أحمد محمد">
+                            </div>
+                            <div class="row-2">
+                                <div class="form-group">
+                                    <label>رقم الهاتف (للدخول)</label>
+                                    <input type="tel" id="driver-phone" placeholder="01000000000">
+                                </div>
+                                <div class="form-group">
+                                    <label>كلمة المرور</label>
+                                    <input type="password" id="driver-pass" placeholder="******">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>بيانات المركبة</label>
+                                <input type="text" id="driver-vehicle" placeholder="مثال: موتوسيكل - رقم 1234">
+                            </div>
+                            <button class="btn btn-primary" onclick="window.addDriver()" style="width: 100%;">💾 تسجيل الطيار</button>
+                        </div>
+
+                        <div class="card">
+                            <h3 class="card-title">
+                                <span class="card-title-icon">📊</span>
+                                ملخص الطيارين
+                            </h3>
+                            <div style="padding: 20px 0;">
+                                <div class="order-detail-row">
+                                    <span class="label">إجمالي الطيارين المسجلين</span>
+                                    <span class="value" id="drivers-total-count">0</span>
+                                </div>
+                                <div class="order-detail-row">
+                                    <span class="label">نصيحة</span>
+                                    <span class="value" style="color: var(--info); font-size: 13px;">شارك رقم الهاتف والباسورد مع كل طيار</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">
+                            <span class="card-title-icon">👥</span>
+                            جميع الطيارين المسجلين
+                        </h3>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>الطيار</th>
+                                        <th>رقم الهاتف</th>
+                                        <th>كلمة المرور</th>
+                                        <th>إجراء</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="drivers-table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- قسم الأرشيف -->
+                <section id="archive-section" class="section">
+                    <div class="section-header">
+                        <div>
+                            <h2>أرشيف الطلبات المنتهية 📁</h2>
+                            <p>سجل الطلبات التي تم تسليمها بنجاح</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>رقم الطلب</th>
+                                        <th>العميل</th>
+                                        <th>الطيار</th>
+                                        <th>الإجمالي</th>
+                                        <th>التاريخ</th>
+                                        <th>إجراء</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="archive-table-body">
+                                    <tr><td colspan="6" style="text-align: center; padding: 40px; color: var(--medium-text);">جاري تحميل الأرشيف...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- مودال تفاصيل الطلب -->
+    <div class="modal-overlay" id="order-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>📋 تفاصيل الطلب #<span id="modal-order-num"></span></h3>
+                <button class="close-modal" onclick="closeOrderModal()">✕</button>
+            </div>
+            <div class="modal-body" id="modal-order-content">
+                <!-- يتم ملؤها بالجافاسكربت -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="closeOrderModal()">إغلاق</button>
+            </div>
         </div>
     </div>
 
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.6.8/firebase-firestore.js"></script>
+    <!-- كود Firebase والمنطق البرمجي -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, getDocs, onSnapshot, updateDoc, doc, deleteDoc, query, orderBy, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-    <script>
         const firebaseConfig = {
-            apiKey: "AIzaSyAis4G-tc2NkT9nrn4VpB39mDVqPILqTpA",
-            authDomain: "saroo5-ab72a.firebaseapp.com",
-            projectId: "saroo5-ab72a",
-            storageBucket: "saroo5-ab72a.firebasestorage.app",
-            messagingSenderId: "265152576253",
-            appId: "1:265152576253:web:38d3104acc701b3fd19c94",
-            measurementId: "G-HC4G1LQSEY"
+            apiKey: "AIzaSyDHRBlNeJ_TWe_ypUaEkgruhnbt0fjuH8M",
+            authDomain: "delivery-c2b83.firebaseapp.com",
+            databaseURL: "https://delivery-c2b83-default-rtdb.firebaseio.com",
+            projectId: "delivery-c2b83",
+            storageBucket: "delivery-c2b83.firebasestorage.app",
+            messagingSenderId: "202115203824",
+            appId: "1:202115203824:web:8717748c8bd7bff3aff835"
         };
 
-        try {
-            firebase.initializeApp(firebaseConfig);
-            console.log('✅ Firebase initialized successfully');
-        } catch (error) {
-            console.error('❌ Firebase initialization error:', error);
-            showError('خطأ في إعدادات Firebase: ' + error.message);
-        }
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-        const db = firebase.firestore();
+        let driversList = [];
+        let restaurantsList = [];
+        let productsList = [];
+        let ordersList = [];
+        let currentOrderFilter = 'all';
+        let globalSearchTerm = '';
+        let ordersInitialized = false;
 
-        // دالة لتنظيف HTML ضد XSS
-        function escapeHtml(text) {
-            if (!text) return '';
-            const map = {
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#039;'
-            };
-            return String(text).replace(/[&<>"']/g, function(m) { return map[m]; });
-        }
-
-        async function loadOrders() {
-            const container = document.getElementById('orders-container');
-            container.innerHTML = '<div class="loading">جاري تحميل الطلبات...</div>';
-            
-            try {
-                console.log('📡 جاري جلب جميع الطلبات...');
-                
-                // جلب جميع الطلبات
-                const snapshot = await db.collection('orders').get();
-                
-                const orders = [];
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    const createdAt = data.createdAt ? 
-                        (data.createdAt.toDate ? new Date(data.createdAt.toDate()) : new Date(data.createdAt)) : 
-                        null;
-                    
-                    orders.push({
-                        id: doc.id,
-                        name: data.name || 'غير معروف',          // إضافة الاسم
-                        phone: data.phone || 'غير متوفر',
-                        details: data.details || 'لا توجد تفاصيل',
-                        address: data.address || 'لا يوجد عنوان',
-                        status: data.status || 'غير معروف',
-                        createdAt: createdAt ? createdAt.toLocaleString('ar-EG') : 'غير معروف',
-                        timestamp: createdAt ? createdAt.getTime() : 0
-                    });
-                });
-                
-                // ترتيب الطلبات حسب التاريخ (الأحدث أولاً)
-                orders.sort((a, b) => b.timestamp - a.timestamp);
-                
-                console.log('✅ تم تحميل الطلبات:', orders);
-                displayOrders(orders);
-                
-            } catch (error) {
-                console.error('❌ Error loading orders:', error);
-                showError('خطأ في تحميل الطلبات: ' + error.message);
+        function notifyUser(title, message) {
+            showToast(title, message, 'info');
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification(title, { body: message, icon: 'Orange Modern Food Delivery Service Instagram Post.png', tag: title });
+            } else if ('Notification' in window && Notification.permission === 'default') {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') new Notification(title, { body: message, tag: title });
+                }).catch(() => {});
             }
         }
 
-        function displayOrders(orders) {
-            const container = document.getElementById('orders-container');
-            
-            if (orders.length === 0) {
-                container.innerHTML = '<div class="loading">🎉 لا توجد طلبات</div>';
+        /* ========== الإشعارات ========== */
+        window.showToast = function(title, message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            const iconChar = type === 'success' ? '✅' : type === 'error' ? '❌' : 'ℹ️';
+            toast.innerHTML = `
+                <div class="toast-icon">${iconChar}</div>
+                <div class="toast-content">
+                    <p class="toast-title">${title}</p>
+                    <p class="toast-msg">${message}</p>
+                </div>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('hide');
+                setTimeout(() => toast.remove(), 300);
+            }, 3500);
+        };
+
+        /* ========== التنقل بين الأقسام ========== */
+        const pageTitles = {
+            'orders-section': { t: 'إدارة الطلبات 📦', s: 'متابعة وتوجيه الطلبات الجديدة' },
+            'dashboard-section': { t: 'لوحة الإحصائيات 📊', s: 'نظرة شاملة على أداء النظام' },
+            'restaurants-section': { t: 'المحلات والمنتجات 🛒', s: 'إضافة وتعديل محلات السوق والمنتجات' },
+            'drivers-section': { t: 'إدارة الطيارين 🛵', s: 'إضافة وتعديل بيانات الطيارين' },
+            'archive-section': { t: 'أرشيف الطلبات 📁', s: 'سجل الطلبات المنتهية' }
+        };
+
+        window.openTab = function(tabId, btnElement) {
+            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btnElement.classList.add('active');
+            const info = pageTitles[tabId];
+            if (info) {
+                document.getElementById('current-page-title').innerText = info.t;
+                document.getElementById('current-page-sub').innerText = info.s;
+            }
+        };
+
+        /* ========== البحث الشامل ========== */
+        window.handleGlobalSearch = function(term) {
+            globalSearchTerm = term.toLowerCase().trim();
+            document.getElementById('clear-global-search').classList.toggle('visible', term.length > 0);
+            renderOrders();
+            renderArchive();
+            renderProductsTable();
+            renderDrivers();
+        };
+
+        window.clearGlobalSearch = function() {
+            document.getElementById('global-search').value = '';
+            globalSearchTerm = '';
+            document.getElementById('clear-global-search').classList.remove('visible');
+            renderOrders();
+            renderArchive();
+            renderProductsTable();
+            renderDrivers();
+        };
+
+        function matchesGlobal(text) {
+            if (!globalSearchTerm) return true;
+            return String(text).toLowerCase().includes(globalSearchTerm);
+        }
+
+        /* ========== فلترة الطلبات ========== */
+        window.filterOrders = function(filter, btn) {
+            currentOrderFilter = filter;
+            document.querySelectorAll('.order-tab-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            renderOrders();
+        };
+
+        window.refreshAll = function() {
+            showToast('جاري التحديث...', 'تحديث جميع البيانات', 'info');
+        };
+
+        /* ========== إدارة الطيارين ========== */
+        window.addDriver = async function() {
+            const name = document.getElementById('driver-name').value.trim();
+            const phone = document.getElementById('driver-phone').value.trim();
+            const pass = document.getElementById('driver-pass').value.trim();
+            const vehicle = document.getElementById('driver-vehicle').value.trim();
+
+            if(!name || !phone || !pass) {
+                showToast('بيانات ناقصة!', 'أكمل جميع بيانات الطيار', 'error');
                 return;
             }
 
-            let html = '';
-            orders.forEach(order => {
-                // تنظيف جميع البيانات ضد XSS
-                const safeId = escapeHtml(order.id);
-                const safePhone = escapeHtml(order.phone);
-                const safeDetails = escapeHtml(order.details);
-                const safeAddress = escapeHtml(order.address);
-                const safeStatus = escapeHtml(order.status);
-                const safeCreatedAt = escapeHtml(order.createdAt);
-                
-                                        // <h3>رقم الطلب: ${safeId.substring(0, 8)}</h3>
+            await addDoc(collection(db, "Drivers"), { name, phone, password: pass, vehicle, active: true, createdAt: new Date().getTime() });
+            showToast('تم التسجيل ✅', `تم إضافة الطيار ${name} بنجاح`, 'success');
+            document.getElementById('driver-name').value = '';
+            document.getElementById('driver-phone').value = '';
+            document.getElementById('driver-pass').value = '';
+            document.getElementById('driver-vehicle').value = '';
+        };
 
-                html += `
-                    <div class="order">
-                        <h3>رقم الطلب: ${escapeHtml(order.phone)}</h3>
-                        <p><strong>👤 الاسم:</strong> ${escapeHtml(order.name)}</p>  <!-- ← الاسم -->
-                        <p><strong>📞 الهاتف:</strong> ${safePhone}</p>
-                        <p><strong>📦 التفاصيل:</strong> ${safeDetails}</p>
-                        <p><strong>📍 العنوان:</strong> ${safeAddress}</p>
-                        <p><strong>🔄 الحالة:</strong> <span style="color: ${getStatusColor(order.status)}; font-weight: bold;">${safeStatus}</span></p>
-                        <p><strong>🕒 وقت الإنشاء:</strong> ${safeCreatedAt}</p>
-                        <div style="margin-top: 15px;">
-                            <button class="btn" style="background: #27ae60;" onclick="updateStatus('${safeId}', 'قيد التجهيز')">⏳ قيد التجهيز</button>
-                            <button class="btn" style="background: #f39c12;" onclick="updateStatus('${safeId}', 'في الطريق')">🚚 في الطريق</button>
-                            <button class="btn" style="background: #27ae60;" onclick="updateStatus('${safeId}', 'تم التوصيل')">✅ تم التوصيل</button>
-                            <button class="btn" style="background: #e74c3c;" onclick="rejectOrder('${safeId}')">❌ إلغاء</button>
+        function loadDrivers() {
+            onSnapshot(collection(db, "Drivers"), (snapshot) => {
+                driversList = [];
+                snapshot.forEach((d) => {
+                    driversList.push({ id: d.id, ...d.data() });
+                });
+                renderDrivers();
+                document.getElementById('drivers-total-count').innerText = driversList.length;
+                document.getElementById('dash-drivers-count').innerText = driversList.length;
+                renderDashRecentDrivers();
+                renderOrders();
+            });
+        }
+
+        function renderDrivers() {
+            const tbody = document.getElementById('drivers-table-body');
+            let filtered = driversList.filter(d =>
+                matchesGlobal(d.name) || matchesGlobal(d.phone) || matchesGlobal(d.password)
+            );
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:30px; color:var(--medium-text)">لا يوجد بيانات</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = '';
+            filtered.forEach((d) => {
+                const initials = d.name ? d.name.charAt(0) : '؟';
+                tbody.innerHTML += `
+                    <tr>
+                        <td>
+                            <div class="customer-cell">
+                                <div class="customer-avatar">${initials}</div>
+                                <div class="customer-meta">
+                                    <h4>${escapeHtml(d.name)}</h4>
+                                    <p>🛵 طيار دليفري</p>
+                                </div>
+                            </div>
+                        </td>
+                        <td><a href="tel:${d.phone}" style="color:var(--info); font-weight:700; text-decoration:none;">${escapeHtml(d.phone)}</a></td>
+                        <td><code style="background:#f3f4f6; padding:3px 8px; border-radius:6px;">${escapeHtml(d.password)}</code></td>
+                        <td class="actions-cell">
+                            <button class="btn btn-danger btn-sm" onclick="window.deleteDriver('${d.id}')">🗑️ حذف</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function renderDashRecentDrivers() {
+            const container = document.getElementById('dash-recent-drivers');
+            if (driversList.length === 0) {
+                container.innerHTML = `<p style="color: var(--medium-text); text-align: center;">لا يوجد طيارين مسجلين بعد</p>`;
+                return;
+            }
+            container.innerHTML = '';
+            driversList.slice(0, 5).forEach(d => {
+                container.innerHTML += `
+                    <div class="customer-cell" style="padding:10px 0; border-bottom:1px solid var(--border);">
+                        <div class="customer-avatar">${d.name ? d.name.charAt(0) : '؟'}</div>
+                        <div class="customer-meta" style="flex-grow:1;">
+                            <h4>${escapeHtml(d.name)}</h4>
+                            <p>📞 ${escapeHtml(d.phone)}</p>
                         </div>
                     </div>
                 `;
             });
+        }
+
+        window.deleteDriver = async function(id) {
+            if(confirm("هل أنت متأكد من حذف هذا الطيار؟")) {
+                await deleteDoc(doc(db, "Drivers", id));
+                showToast('تم الحذف', 'تم حذف الطيار بنجاح', 'info');
+            }
+        };
+
+        /* ========== إدارة المطاعم والمنتجات ========== */
+        function readImageFile(inputId) {
+            const file = document.getElementById(inputId).files?.[0];
+            if (!file) return Promise.resolve('');
+
+            return new Promise(resolve => {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const image = new Image();
+                    image.onload = () => {
+                        const scale = Math.min(1, 1000 / Math.max(image.width, image.height));
+                        const canvas = document.createElement('canvas');
+                        canvas.width = Math.max(1, Math.round(image.width * scale));
+                        canvas.height = Math.max(1, Math.round(image.height * scale));
+                        canvas.getContext('2d').drawImage(image, 0, 0, canvas.width, canvas.height);
+                        resolve(canvas.toDataURL('image/jpeg', 0.78));
+                    };
+                    image.src = reader.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        window.addRestaurant = async function() {
+            const name = document.getElementById('rest-name').value.trim();
+            const image = await readImageFile('rest-img');
+            if(!name || !image) {
+                showToast('بيانات ناقصة!', 'أدخل اسم وصورة المحل', 'error');
+                return;
+            }
+            await addDoc(collection(db, "Restaurants"), { name, image, createdAt: new Date().getTime() });
+            showToast('تم الحفظ ✅', `تم إضافة محل ${name}`, 'success');
+            document.getElementById('rest-name').value = '';
+            document.getElementById('rest-img').value = '';
+        };
+
+        function loadRestaurants() {
+            onSnapshot(collection(db, "Restaurants"), (snapshot) => {
+                restaurantsList = [];
+                const select = document.getElementById('rest-select');
+                select.innerHTML = '<option value="">-- اختر المطعم --</option>';
+                snapshot.forEach(d => {
+                    restaurantsList.push({ id: d.id, ...d.data() });
+                    select.innerHTML += `<option value="${d.id}">${escapeHtml(d.data().name)}</option>`;
+                });
+                document.getElementById('dash-rest-count').innerText = restaurantsList.length;
+                renderRestaurantsTable();
+                renderDashRecentRestaurants();
+                renderProductsTable();
+            });
+        }
+
+        function renderRestaurantsTable() {
+            const tbody = document.getElementById('restaurants-table-body');
+            if (restaurantsList.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding:30px; color:var(--medium-text)">لا توجد محلات بعد</td></tr>`;
+                return;
+            }
+            tbody.innerHTML = '';
+            restaurantsList.forEach(r => {
+                const pCount = productsList.filter(p => p.restId === r.id).length;
+                tbody.innerHTML += `
+                    <tr>
+                        <td style="font-weight: 700;">🍽️ ${escapeHtml(r.name)}</td>
+                        <td>${pCount} صنف</td>
+                        <td class="actions-cell">
+                            <button class="btn btn-danger btn-sm" onclick="window.deleteRestaurant('${r.id}')">🗑️ حذف</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function renderDashRecentRestaurants() {
+            const container = document.getElementById('dash-recent-restaurants');
+            if (restaurantsList.length === 0) {
+                container.innerHTML = `<p style="color: var(--medium-text); text-align: center;">لا توجد محلات بعد</p>`;
+                return;
+            }
+            container.innerHTML = '';
+            restaurantsList.slice(0, 5).forEach(r => {
+                const pCount = productsList.filter(p => p.restId === r.id).length;
+                container.innerHTML += `
+                    <div class="customer-cell" style="padding:10px 0; border-bottom:1px solid var(--border);">
+                        <div class="customer-avatar" style="background: var(--warning-light); color: var(--warning);">🍽️</div>
+                        <div class="customer-meta" style="flex-grow:1;">
+                            <h4>${escapeHtml(r.name)}</h4>
+                            <p>🥘 ${pCount} منتج</p>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        window.deleteRestaurant = async function(id) {
+            if(confirm("هل أنت متأكد من حذف هذا المطعم وجميع منتجاته؟")) {
+                await deleteDoc(doc(db, "Restaurants", id));
+                showToast('تم الحذف', 'تم حذف المحل بنجاح', 'info');
+            }
+        };
+
+        window.addProduct = async function() {
+            const restId = document.getElementById('rest-select').value;
+            const name = document.getElementById('prod-name').value.trim();
+            const price = Number(document.getElementById('prod-price').value);
+            const image = await readImageFile('prod-img');
+
+            if(!restId || !name || !price || !image) {
+                showToast('بيانات ناقصة!', 'أكمل جميع بيانات المنتج', 'error');
+                return;
+            }
             
-            container.innerHTML = html;
+            await addDoc(collection(db, "Products"), { restId, name, price, image, createdAt: new Date().getTime() });
+            showToast('تم الحفظ ✅', `تم إضافة منتج ${name}`, 'success');
+            document.getElementById('prod-name').value = '';
+            document.getElementById('prod-price').value = '';
+            document.getElementById('prod-img').value = '';
+        };
+
+        function loadProductsForPricing() {
+            onSnapshot(collection(db, "Products"), (snapshot) => {
+                productsList = [];
+                snapshot.forEach(d => productsList.push({ id: d.id, ...d.data() }));
+                renderProductsTable();
+                renderRestaurantsTable();
+                renderDashRecentRestaurants();
+            });
         }
 
-        function showError(message) {
-            const container = document.getElementById('orders-container');
-            container.innerHTML = `<div class="error">${message}</div>`;
-        }
+        function renderProductsTable() {
+            const tbody = document.getElementById('products-table-body');
+            let filtered = productsList.filter(p => {
+                const rest = restaurantsList.find(r => r.id === p.restId);
+                const restName = rest ? rest.name : '';
+                return matchesGlobal(p.name) || matchesGlobal(restName) || matchesGlobal(p.price);
+            });
 
-        function getStatusColor(status) {
-            if (status.includes('تم التوصيل')) return '#27ae60';
-            if (status.includes('في الطريق')) return '#f39c12';
-            if (status.includes('قيد التجهيز')) return '#3498db';
-            if (status.includes('جديد')) return '#95a5a6';
-            if (status.includes('ملغي')) return '#e74c3c';
-            return '#333';
-        }
-
-        async function updateStatus(orderId, newStatus) {
-            if (confirm(`هل أنت متأكد من تغيير حالة الطلب إلى: ${newStatus}؟`)) {
-                try {
-                    // إذا كانت الحالة "تم التوصيل"، احذف الطلب
-                    if (newStatus === 'تم التوصيل') {
-                        await db.collection('orders').doc(orderId).delete();
-                        alert(`✅ تم حذف الطلب بعد التوصيل بنجاح`);
-                    } else {
-                        // غير ذلك، حدث الحالة فقط
-                        await db.collection('orders').doc(orderId).update({
-                            status: newStatus
-                        });
-                        alert(`✅ تم تحديث حالة الطلب إلى "${newStatus}"`);
-                    }
-                    loadOrders();
-                } catch (error) {
-                    alert('❌ خطأ في تحديث الطلب: ' + error.message);
-                    console.error('Error updating order:', error);
-                }
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px; color:var(--medium-text)">لا توجد منتجات</td></tr>`;
+                return;
             }
+
+            tbody.innerHTML = '';
+            filtered.forEach(d => {
+                const rest = restaurantsList.find(r => r.id === d.restId);
+                const restName = rest ? rest.name : 'مطعم محذوف';
+                tbody.innerHTML += `
+                    <tr>
+                        <td style="font-weight:700;">🥘 ${escapeHtml(d.name)}</td>
+                        <td>🍽️ ${escapeHtml(restName)}</td>
+                        <td class="price-cell">${d.price} ج.م</td>
+                        <td>
+                            <input type="number" id="newPrice_${d.id}" placeholder="سعر جديد" style="width: 120px; padding: 8px 12px; border:2px solid var(--border); border-radius:10px; font-family:inherit;">
+                        </td>
+                        <td class="actions-cell">
+                            <button class="btn btn-info btn-sm" onclick="window.editProduct('${d.id}')">✏️ تعديل</button>
+                            <button class="btn btn-warning btn-sm" onclick="window.updateProductPrice('${d.id}')">💱 تحديث</button>
+                            <button class="btn btn-danger btn-sm" onclick="window.deleteProduct('${d.id}')">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            });
         }
 
-        async function rejectOrder(orderId) {
-            if(confirm('هل أنت متأكد من إلغاء وحذف هذا الطلب؟')) {
-                try {
-                    // حذف الطلب من قاعدة البيانات
-                    await db.collection('orders').doc(orderId).delete();
-                    alert('❌ تم حذف الطلب بنجاح');
-                    loadOrders();
-                } catch (error) {
-                    alert('❌ خطأ في حذف الطلب: ' + error.message);
-                    console.error('Error deleting order:', error);
-                }
+        window.updateProductPrice = async function(productId) {
+            const newPrice = Number(document.getElementById(`newPrice_${productId}`).value);
+            if(!newPrice || newPrice <= 0) {
+                showToast('خطأ!', 'أدخل سعراً صحيحاً أكبر من صفر', 'error');
+                return;
             }
+            await updateDoc(doc(db, "Products", productId), { price: newPrice });
+            showToast('تم التحديث ✅', `تم تحديث السعر لـ ${newPrice} ج.م`, 'success');
+        };
+
+        window.editProduct = async function(productId) {
+            const product = productsList.find(item => item.id === productId);
+            if (!product) return;
+            const name = prompt('اسم المنتج:', product.name || '');
+            if (name === null || !name.trim()) return;
+            const image = prompt('رابط صورة المنتج:', product.image || '');
+            if (image === null) return;
+            try {
+                await updateDoc(doc(db, "Products", productId), {
+                    name: name.trim(),
+                    image: image.trim()
+                });
+                showToast('تم التعديل ✅', 'تم تحديث اسم وصورة المنتج', 'success');
+            } catch (error) {
+                showToast('خطأ في التعديل', 'تعذر حفظ بيانات المنتج حالياً', 'error');
+            }
+        };
+
+        window.deleteProduct = async function(id) {
+            if(confirm("هل أنت متأكد من حذف هذا المنتج؟")) {
+                await deleteDoc(doc(db, "Products", id));
+                showToast('تم الحذف', 'تم حذف المنتج', 'info');
+            }
+        };
+
+        /* ========== إدارة الطلبات ========== */
+        function loadOrders() {
+            const q = query(collection(db, "Orders"), orderBy("timestamp", "desc"));
+            onSnapshot(q, (snapshot) => {
+                ordersList = [];
+                snapshot.forEach(d => ordersList.push({ id: d.id, ...d.data() }));
+
+                if (ordersInitialized) {
+                    snapshot.docChanges().filter(change => change.type === 'added').forEach(change => {
+                        const order = change.doc.data();
+                        notifyUser('طلب جديد 📦', `وصل طلب #${order.orderNumber || change.doc.id} من ${order.customerName || 'عميل'}`);
+                    });
+                }
+                ordersInitialized = true;
+                
+                const pendingCount = ordersList.filter(o => o.status === 'pending').length;
+                const onwayCount = ordersList.filter(o => o.status === 'on_the_way').length;
+                const deliveredCount = ordersList.filter(o => o.status === 'delivered').length;
+                
+                document.getElementById('stat-pending').innerText = pendingCount;
+                document.getElementById('stat-onway').innerText = onwayCount;
+                document.getElementById('stat-delivered').innerText = deliveredCount;
+
+                const now = new Date();
+                const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+                const weekStart = new Date(now.getFullYear(), now.getMonth(), now.getDate() - now.getDay()).getTime();
+                const monthStart = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+                const deliveredAt = order => order.deliveredAt || order.timestamp || 0;
+                const revenueSince = start => ordersList
+                    .filter(o => o.status === 'delivered' && deliveredAt(o) >= start)
+                    .reduce((s, o) => s + Number(o.totalPrice || 0), 0);
+                const todayRevenue = revenueSince(today);
+                const weekRevenue = revenueSince(weekStart);
+                const monthRevenue = revenueSince(monthStart);
+                document.getElementById('stat-revenue').innerText = todayRevenue + ' ج.م';
+                document.getElementById('dash-revenue-today').innerText = todayRevenue + ' ج.م';
+                document.getElementById('dash-revenue-week').innerText = weekRevenue + ' ج.م';
+                document.getElementById('dash-revenue-month').innerText = monthRevenue + ' ج.م';
+
+                document.getElementById('dash-total-orders').innerText = ordersList.length;
+                const totalRev = ordersList
+                    .filter(o => o.status === 'delivered')
+                    .reduce((s, o) => s + (o.totalPrice || 0), 0);
+                document.getElementById('dash-total-revenue').innerText = totalRev + ' ج.م';
+
+                document.getElementById('tab-all-count').innerText = ordersList.length;
+                document.getElementById('tab-pending-count').innerText = pendingCount;
+                document.getElementById('tab-onway-count').innerText = onwayCount;
+                document.getElementById('tab-delivered-count').innerText = deliveredCount;
+
+                renderOrders();
+                renderArchive();
+            });
         }
 
-        document.addEventListener('DOMContentLoaded', loadOrders);
+        function getStatusBadge(status) {
+            if (status === 'pending')
+                return `<span class="status-badge status-pending">⏱️ قيد الانتظار</span>`;
+            if (status === 'on_the_way')
+                return `<span class="status-badge status-onway">🛵 مع الطيار</span>`;
+            if (status === 'delivered')
+                return `<span class="status-badge status-delivered">✅ تم التسليم</span>`;
+            return `<span class="status-badge status-pending">${status || '—'}</span>`;
+        }
+
+        function renderOrders() {
+            const tbody = document.getElementById('orders-table-body');
+            let filtered = ordersList.filter(o => {
+                if (currentOrderFilter !== 'all' && o.status !== currentOrderFilter) return false;
+                const itemsStr = (o.items || []).map(i => i.name).join(' ');
+                const driver = o.driverName || '';
+                return matchesGlobal(o.orderNumber) || matchesGlobal(o.customerName)
+                    || matchesGlobal(o.customerPhone) || matchesGlobal(o.customerAddress || '')
+                    || matchesGlobal(itemsStr)
+                    || matchesGlobal(driver) || matchesGlobal(o.totalPrice);
+            });
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:50px; color:var(--medium-text)">
+                    <div style="font-size:48px; margin-bottom:10px;">📭</div>
+                    لا توجد طلبات حالياً
+                </td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = '';
+            filtered.slice(0, 50).forEach((order) => {
+                const orderId = order.id;
+                const initials = order.customerName ? order.customerName.charAt(0) : '؟';
+                
+                let driversOptions = '<option value="">اختر طيار...</option>';
+                driversList.forEach(driver => {
+                    const selected = (order.driverId === driver.id) ? 'selected' : '';
+                    driversOptions += `<option value="${driver.id}" ${selected}>${escapeHtml(driver.name)}</option>`;
+                });
+
+                const itemsPreview = (order.items || []).slice(0, 2).map(i => i.name).join(' + ');
+                const moreItems = (order.items || []).length > 2 ? ` +${order.items.length - 2}` : '';
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td style="font-weight:800; color:var(--primary-orange);">#${order.orderNumber}</td>
+                        <td>
+                            <div class="customer-cell">
+                                <div class="customer-avatar">${initials}</div>
+                                <div class="customer-meta">
+                                    <h4>${escapeHtml(order.customerName || '—')}</h4>
+                                    <p>📞 ${escapeHtml(order.customerPhone || '—')}</p>
+                                    ${order.customerAddress ? `<p style="font-size:11px;margin:2px 0 0 0;color:var(--info);">📍 ${escapeHtml(order.customerAddress)}</p>` : ''}
+                                </div>
+                            </div>
+                        </td>
+                        <td style="max-width:200px;">
+                            <div style="font-size:12px; color:var(--medium-text);">${escapeHtml(itemsPreview)}${moreItems}</div>
+                            <div style="font-size:11px; color:var(--medium-text); margin-top:2px;">${(order.items || []).length} منتج</div>
+                        </td>
+                        <td>${getStatusBadge(order.status)}</td>
+                        <td style="font-weight:700;">
+                            ${order.driverName ? escapeHtml(order.driverName) : '<span style="color:var(--warning)">— غير محدد</span>'}
+                        </td>
+                        <td class="price-cell">${order.totalPrice || 0} ج.م</td>
+                        <td class="actions-cell">
+                            <button class="btn btn-info btn-sm" onclick="window.showOrderDetails('${orderId}')">👁️ تفاصيل</button>
+                            ${order.status !== 'delivered' ? `
+                                <select id="assign_${orderId}" style="padding:7px 10px; border:2px solid var(--border); border-radius:9px; font-family:inherit; font-size:13px;">${driversOptions}</select>
+                                <button class="btn btn-success btn-sm" onclick="window.assignDriverToOrder('${orderId}')">✓ تعيين</button>
+                            ` : ''}
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function renderArchive() {
+            const tbody = document.getElementById('archive-table-body');
+            let delivered = ordersList.filter(o => {
+                if (o.status !== 'delivered') return false;
+                const itemsStr = (o.items || []).map(i => i.name).join(' ');
+                return matchesGlobal(o.orderNumber) || matchesGlobal(o.customerName)
+                    || matchesGlobal(o.customerAddress || '') || matchesGlobal(o.driverName || '') || matchesGlobal(itemsStr);
+            });
+
+            if (delivered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:50px; color:var(--medium-text)">
+                    <div style="font-size:48px; margin-bottom:10px;">📭</div>
+                    الأرشيف فارغ حالياً
+                </td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = '';
+            delivered.forEach(order => {
+                const initials = order.customerName ? order.customerName.charAt(0) : '؟';
+                const date = order.timestamp ? new Date(order.timestamp).toLocaleDateString('ar-EG') : '—';
+                tbody.innerHTML += `
+                    <tr>
+                        <td style="font-weight:800; color:var(--primary-orange);">#${order.orderNumber}</td>
+                        <td>
+                            <div class="customer-cell">
+                                <div class="customer-avatar">${initials}</div>
+                                <div class="customer-meta">
+                                    <h4>${escapeHtml(order.customerName || '—')}</h4>
+                                    <p>📞 ${escapeHtml(order.customerPhone || '—')}</p>
+                                    ${order.customerAddress ? `<p style="font-size:11px;margin:2px 0 0 0;color:var(--info);">📍 ${escapeHtml(order.customerAddress)}</p>` : ''}
+                                </div>
+                            </div>
+                        </td>
+                        <td style="font-weight:700;">🛵 ${escapeHtml(order.driverName || '—')}</td>
+                        <td class="price-cell">${order.totalPrice || 0} ج.م</td>
+                        <td style="color:var(--medium-text); font-size:13px;">${date}</td>
+                        <td class="actions-cell">
+                            <button class="btn btn-info btn-sm" onclick="window.showOrderDetails('${order.id}')">👁️ تفاصيل</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        window.assignDriverToOrder = async function(orderId) {
+            const driverSelect = document.getElementById(`assign_${orderId}`);
+            if (!driverSelect) return;
+            const driverId = driverSelect.value;
+            const driverName = driverSelect.options[driverSelect.selectedIndex].text;
+            const driver = driversList.find(item => item.id === driverId);
+
+            if(!driverId) {
+                showToast('اختر طياراً!', 'حدد طيار أولاً ثم اضغط تأكيد', 'error');
+                return;
+            }
+
+            await updateDoc(doc(db, "Orders", orderId), {
+                driverId: driverId,
+                driverName: driverName,
+                driverPhone: driver?.phone || '',
+                driverVehicle: driver?.vehicle || '',
+                status: 'on_the_way',
+                assignedAt: new Date().getTime()
+            });
+            notifyUser('تم إسناد الطلب ✅', `تم إرسال الطلب #${ordersList.find(o => o.id === orderId)?.orderNumber || ''} للطيار ${driverName}`);
+        };
+
+        window.showOrderDetails = function(orderId) {
+            const order = ordersList.find(o => o.id === orderId);
+            if (!order) return;
+
+            document.getElementById('modal-order-num').innerText = order.orderNumber;
+            
+            const items = order.items || [];
+            let itemsHtml = '';
+            items.forEach(it => {
+                const qty = it.qty || 1;
+                itemsHtml += `
+                    <div class="item-entry">
+                        <span>🥘 ${escapeHtml(it.name)} <span style="color:var(--medium-text); font-size:12px;">× ${qty}</span></span>
+                        <span style="font-weight:700;">${(it.price * qty)} ج.م</span>
+                    </div>
+                `;
+            });
+
+            const subTotal = order.subtotal || items.reduce((s, i) => s + (i.price * (i.qty || 1)), 0);
+            const delivery = order.deliveryFee || 0;
+
+            document.getElementById('modal-order-content').innerHTML = `
+                <div class="order-detail-row">
+                    <span class="label">الحالة</span>
+                    <span class="value">${getStatusBadge(order.status)}</span>
+                </div>
+                <div class="order-detail-row">
+                    <span class="label">اسم العميل</span>
+                    <span class="value">${escapeHtml(order.customerName || '—')}</span>
+                </div>
+                <div class="order-detail-row">
+                    <span class="label">رقم الهاتف</span>
+                    <span class="value"><a href="tel:${order.customerPhone}" style="color:var(--info)">${escapeHtml(order.customerPhone || '—')}</a></span>
+                </div>
+                <div class="order-detail-row">
+                    <span class="label">عنوان الخريطة</span>
+                    <span class="value">${order.customerLocation?.mapsUrl ? `<a href="${order.customerLocation.mapsUrl}" target="_blank" style="color:var(--info);font-weight:800;">فتح الموقع 📍</a>` : 'غير محدد'}</span>
+                </div>
+                ${order.customerPhoto ? `<div style="margin-top:12px;"><span class="label" style="display:block;margin-bottom:6px;">صورة العميل</span><a href="${order.customerPhoto}" target="_blank"><img src="${order.customerPhoto}" alt="صورة مرفقة" style="width:100%;max-height:220px;object-fit:contain;border-radius:12px;background:#f9fafb;"></a></div>` : ''}
+                <div class="order-detail-row">
+                    <span class="label">الطيار المسؤول</span>
+                    <span class="value">${order.driverName ? '🛵 ' + escapeHtml(order.driverName) : '<span style="color:var(--warning)">غير محدد بعد</span>'}</span>
+                </div>
+                <div class="order-detail-row">
+                    <span class="label">التوقيت</span>
+                    <span class="value" style="font-size:13px; color:var(--medium-text);">${order.timestamp ? new Date(order.timestamp).toLocaleString('ar-EG') : '—'}</span>
+                </div>
+
+                <div style="margin-top: 18px;">
+                    <h4 style="margin:0 0 8px 0; font-size:16px; font-weight:800;">🍽️ تفاصيل الأكل (${items.length} صنف)</h4>
+                    <div class="items-list-box">
+                        ${itemsHtml || '<p style="color:var(--medium-text); text-align:center; margin:0;">لا أصناف</p>'}
+                    </div>
+                </div>
+
+                <div style="margin-top: 16px;">
+                    <div class="order-detail-row">
+                        <span class="label">المجموع الفرعي</span>
+                        <span class="value">${subTotal} ج.م</span>
+                    </div>
+                    <div class="order-detail-row">
+                        <span class="label">رسوم التوصيل</span>
+                        <span class="value" style="color:var(--primary-orange);">${delivery} ج.م</span>
+                    </div>
+                    <div class="total-row">
+                        <span class="label">الإجمالي الكلي</span>
+                        <span class="value">${order.totalPrice || (subTotal + delivery)} ج.م</span>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('order-modal').classList.add('visible');
+        };
+
+        window.closeOrderModal = function() {
+            document.getElementById('order-modal').classList.remove('visible');
+        };
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            const div = document.createElement('div');
+            div.textContent = String(str);
+            return div.innerHTML;
+        }
+
+        // تشغيل الدوال عند تحميل الصفحة
+        document.addEventListener("DOMContentLoaded", () => {
+            loadDrivers();
+            loadRestaurants();
+            loadProductsForPricing();
+            loadOrders();
+        });
     </script>
+
 </body>
 </html>
