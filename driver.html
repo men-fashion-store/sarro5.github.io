@@ -6,8 +6,8 @@
     <meta name="theme-color" content="#ff6b35">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="كابتن الصاروووخ">
-    <link rel="icon" type="image/png" href="Orange Modern Food Delivery Service Instagram Post.png">
-    <link rel="apple-touch-icon" href="Orange Modern Food Delivery Service Instagram Post.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="Orange Modern Food Delivery Service Instagram Post.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="Orange Modern Food Delivery Service Instagram Post.png">
     <title>🛵 كابتن الصاروووخ | توصيل طلبات السوق</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -878,9 +878,15 @@
         .close-x-btn:hover { background: var(--danger); color: white; }
 
         @media (max-width: 480px) {
-            .stats-row { gap: 10px; }
-            .mini-stat { padding: 14px 8px; }
+            .app-header { padding: 14px 12px; }
+            .content-wrap { padding: 14px 12px; }
+            .stats-row { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+            .mini-stat { padding: 12px 6px; border-radius: 13px; }
             .mini-stat-value { font-size: 16px; }
+            .mini-stat-label { font-size: 11px; }
+            .order-card { padding: 14px; }
+            .order-actions { flex-wrap: wrap; }
+            .order-actions > * { min-width: 0; }
         }
     </style>
 </head>

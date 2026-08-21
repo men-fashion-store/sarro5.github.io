@@ -1335,24 +1335,37 @@
             <p class="tagline" style="margin-top:-20px;">توصيل طلباتك في أسرع وقت وأقل تكلفة</p>
 
             <div id="register-section">
-                <h2 style="font-size: 22px; margin-bottom: 22px;">سجل بياناتك أولاً</h2>
-                <div class="input-field">
-                    <input type="text" id="userName" placeholder="الاسم ثلاثي" required>
+                <div style="display: flex; gap: 12px; margin-bottom: 20px;">
+                    <button type="button" id="new-customer-btn" class="btn-primary" onclick="window.setRegisterMode('new')" style="flex: 1;">🆕 تسجيل جديد</button>
+                    <button type="button" id="login-customer-btn" class="btn-secondary" onclick="window.setRegisterMode('login')" style="flex: 1;">🔐 تسجيل دخول</button>
                 </div>
+
+                <h2 id="register-title" style="font-size: 22px; margin-bottom: 22px;">سجل بياناتك أولاً</h2>
+                
+                <div id="new-customer-fields">
+                    <div class="input-field">
+                        <input type="text" id="userName" placeholder="الاسم ثلاثي" required>
+                    </div>
+                </div>
+                
                 <div class="input-field">
                     <input type="tel" id="userPhone" placeholder="01xxxxxxxxx" inputmode="numeric" maxlength="11" pattern="[0-9]{11}" required oninput="window.restrictPhoneInput(this)">
                     <small id="phone-hint" style="display:block;color:var(--medium-text);margin-top:6px;font-size:12px;">11 رقم فقط (مثال: 01012345678)</small>
                 </div>
-                <div class="input-field">
-                    <input type="text" id="userAddress" placeholder="العنوان (منطقة/عمارة)" required>
+                
+                <div id="new-customer-address-fields">
+                    <div class="input-field">
+                        <input type="text" id="userAddress" placeholder="العنوان (منطقة/عمارة)" required>
+                    </div>
+                    <div class="input-field" style="text-align:right;">
+                        <input type="file" id="customerPhoto" accept="image/*">
+                        <small style="display:block;color:var(--medium-text);margin-top:6px;">📷 اختار صورة من الملفات — مش إجبارية</small>
+                        <img id="customerPhotoPreview" class="hidden" alt="معاينة الصورة" style="max-width:120px;border-radius:12px;margin-top:8px;border:2px solid #eee;">
+                    </div>
+                    <button type="button" class="btn-secondary" onclick="window.captureLocation()">📍 تحديد عنواني من الخريطة</button>
+                    <p id="location-status" style="margin:10px 0 0;color:var(--medium-text);font-size:13px;">اضغط تحديد العنوان عشان الخريطة تملا خانة العنوان تلقائي</p>
                 </div>
-                <div class="input-field" style="text-align:right;">
-                    <input type="file" id="customerPhoto" accept="image/*">
-                    <small style="display:block;color:var(--medium-text);margin-top:6px;">📷 اختار صورة من الملفات — مش إجبارية</small>
-                    <img id="customerPhotoPreview" class="hidden" alt="معاينة الصورة" style="max-width:120px;border-radius:12px;margin-top:8px;border:2px solid #eee;">
-                </div>
-                <button type="button" class="btn-secondary" onclick="window.captureLocation()">📍 تحديد عنواني من الخريطة</button>
-                <p id="location-status" style="margin:10px 0 0;color:var(--medium-text);font-size:13px;">اضغط تحديد العنوان عشان الخريطة تملا خانة العنوان تلقائي</p>
+                
                 <button type="button" id="register-save-btn" class="btn-primary" onclick="window.saveAndEnter()">🚀 تسجيل ودخول</button>
                 <button type="button" id="cancel-edit-btn" class="btn-secondary hidden" onclick="window.cancelEditProfile()" style="margin-top:10px;">إلغاء</button>
             </div>
@@ -2013,6 +2026,52 @@
                 }
             }
             
+            // التحقق من وجود العميل في Firebase
+            try {
+                const existingQ = query(collection(db, "Customers"), where("phone", "==", phone));
+                const existingSnap = await getDocs(existingQ);
+                
+                if (!existingSnap.empty && mode === 'new') {
+                    // العميل موجود بالفعل - منع التسجيل المكرر
+                    showToast('رقم مسجل بالفعل', 'هذا الرقم مسجل من قبل. برجاء تسجيل الدخول بدلاً من التسجيل الجديد.', 'error');
+                    return;
+                }
+                
+                if (existingSnap.empty && mode === 'login') {
+                    // العميل غير موجود - منع تسجيل الدخول
+                    showToast('رقم غير مسجل', 'هذا الرقم غير مسجل. برجاء التسجيل أولاً.', 'error');
+                    return;
+                }
+                
+                if (!existingSnap.empty && mode === 'login') {
+                    // تسجيل دخول ناجح - تحميل بيانات العميل
+                    const customerDoc = existingSnap.docs[0];
+                    const existingData = customerDoc.data();
+                    
+                    // تحديث البيانات المحفوظة
+                    localStorage.setItem("elsarokh_userName", existingData.name || name);
+                    localStorage.setItem("elsarokh_userPhone", existingData.phone || phone);
+                    localStorage.setItem("elsarokh_userAddress", existingData.address || finalAddress);
+                    if (existingData.photo) localStorage.setItem('elsarokh_userPhoto', existingData.photo);
+                    if (existingData.location) localStorage.setItem('elsarokh_userLocation', JSON.stringify(existingData.location));
+                    
+                    customerData = {
+                        name: existingData.name || name,
+                        phone: existingData.phone || phone,
+                        address: existingData.address || finalAddress,
+                        location: existingData.location || customerData.location,
+                        photo: existingData.photo || photo || customerData.photo || ''
+                    };
+                    
+                    resetRegisterFormMode();
+                    showToast('مرحباً بعودتك! 🎉', `تم تسجيل الدخول بنجاح يا ${customerData.name}`, 'success');
+                    window.enterApp();
+                    return;
+                }
+            } catch (error) {
+                console.error('Error checking customer:', error);
+            }
+            
             localStorage.setItem("elsarokh_userName", name);
             localStorage.setItem("elsarokh_userPhone", phone);
             localStorage.setItem("elsarokh_userAddress", finalAddress);
@@ -2064,6 +2123,44 @@
                 localStorage.removeItem("elsarokh_userLocation");
                 localStorage.removeItem("elsarokh_userPhoto");
                 location.reload();
+            }
+        };
+
+        window.setRegisterMode = function(mode) {
+            const registerSection = document.getElementById('register-section');
+            const newCustomerBtn = document.getElementById('new-customer-btn');
+            const loginCustomerBtn = document.getElementById('login-customer-btn');
+            const registerTitle = document.getElementById('register-title');
+            const newCustomerFields = document.getElementById('new-customer-fields');
+            const newCustomerAddressFields = document.getElementById('new-customer-address-fields');
+            const registerSaveBtn = document.getElementById('register-save-btn');
+            const userName = document.getElementById('userName');
+            const userAddress = document.getElementById('userAddress');
+
+            registerSection.dataset.mode = mode;
+
+            if (mode === 'new') {
+                newCustomerBtn.classList.remove('btn-secondary');
+                newCustomerBtn.classList.add('btn-primary');
+                loginCustomerBtn.classList.remove('btn-primary');
+                loginCustomerBtn.classList.add('btn-secondary');
+                registerTitle.innerText = 'سجل بياناتك أولاً';
+                newCustomerFields.classList.remove('hidden');
+                newCustomerAddressFields.classList.remove('hidden');
+                registerSaveBtn.innerText = '🚀 تسجيل ودخول';
+                userName.required = true;
+                userAddress.required = true;
+            } else {
+                loginCustomerBtn.classList.remove('btn-secondary');
+                loginCustomerBtn.classList.add('btn-primary');
+                newCustomerBtn.classList.remove('btn-primary');
+                newCustomerBtn.classList.add('btn-secondary');
+                registerTitle.innerText = 'سجل دخولك';
+                newCustomerFields.classList.add('hidden');
+                newCustomerAddressFields.classList.add('hidden');
+                registerSaveBtn.innerText = '🔐 تسجيل الدخول';
+                userName.required = false;
+                userAddress.required = false;
             }
         };
 
@@ -2766,9 +2863,9 @@
             const subtotal = cart.reduce((s, item) => s + (item.price * item.qty), 0);
             const uniqueRests = new Set(cart.map(item => item.restId)).size;
             let delivery = 0;
-            if (uniqueRests === 1) delivery = 10;
-            else if (uniqueRests >= 2 && uniqueRests <= 3) delivery = 15;
-            else if (uniqueRests > 3) delivery = 25;
+            if (uniqueRests === 1) delivery = 15;
+            else if (uniqueRests >= 2 && uniqueRests <= 3) delivery = 20;
+            else if (uniqueRests > 3) delivery = 30;
 
             document.getElementById('cart-subtotal').innerText = subtotal + " ج.م";
             document.getElementById('cart-delivery').innerText = cart.length ? delivery + " ج.م" : "0 ج.م";
@@ -2784,7 +2881,7 @@
             
             const subtotal = cart.reduce((s, item) => s + (item.price * item.qty), 0);
             const uniqueRests = new Set(cart.map(item => item.restId)).size;
-            let delivery = uniqueRests === 1 ? 10 : (uniqueRests <= 3 ? 15 : 25);
+            let delivery = uniqueRests === 1 ? 15 : (uniqueRests <= 3 ? 20 : 30);
             
             const orderItems = cart.map(i => ({
                 id: i.id, name: i.name, price: i.price, qty: i.qty, restId: i.restId
