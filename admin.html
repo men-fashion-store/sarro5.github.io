@@ -6,11 +6,12 @@
     <meta name="theme-color" content="#1e1e2d">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
-            <title>لوحة التحكم | الصاروووخ - إدارة السوق والتوصيل</title>
+    <link rel="icon" type="image/png" href="Orange Modern Food Delivery Service Instagram Post.png">
+    <link rel="apple-touch-icon" href="Orange Modern Food Delivery Service Instagram Post.png">
+    <title>لوحة التحكم | الصاروووخ - إدارة السوق والتوصيل</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-orange: #ff6b35;
@@ -28,6 +29,7 @@
             --warning-light: #fef3c7;
             --info: #3b82f6;
             --info-light: #dbeafe;
+            --whatsapp: #25d366;
             --dark-text: #1a1a2e;
             --medium-text: #6b7280;
             --border: #e5e7eb;
@@ -35,13 +37,14 @@
             --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
             --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
             --gradient-orange: linear-gradient(135deg, #ff6b35 0%, #ff8c42 50%, #ffb347 100%);
+            --gradient-whatsapp: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
         }
 
         * { box-sizing: border-box; }
 
         body {
             margin: 0;
-            font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Tajawal', 'Almarai', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--light-bg);
             color: var(--dark-text);
             height: 100vh;
@@ -321,6 +324,7 @@
 
         .section { display: none; animation: fadeIn 0.3s ease; }
         .section.active { display: block; }
+        .hidden { display: none !important; }
 
         @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -939,6 +943,11 @@
                     <span class="nav-icon">📦</span>
                     <span>إدارة الطلبات</span>
                 </button>
+                <button class="tab-btn" onclick="window.openTab('customers-section', this)">
+                    <span class="nav-icon">👥</span>
+                    <span>العملاء</span>
+                    <span id="nav-customers-badge" class="hidden" style="margin-right:auto;background:var(--danger);color:#fff;padding:2px 9px;border-radius:50%;font-size:11px;font-weight:800;">0</span>
+                </button>
                 <button class="tab-btn" onclick="window.openTab('dashboard-section', this)">
                     <span class="nav-icon">📊</span>
                     <span>الإحصائيات</span>
@@ -956,6 +965,13 @@
                 <button class="tab-btn" onclick="window.openTab('archive-section', this)">
                     <span class="nav-icon">📁</span>
                     <span>أرشيف الطلبات</span>
+                </button>
+
+                <div class="nav-label">المراقبة</div>
+                <button class="tab-btn" onclick="window.openTab('feedbacks-section', this)">
+                    <span class="nav-icon">⭐</span>
+                    <span>التقييمات والفيدباك</span>
+                    <span id="nav-feedbacks-badge" class="hidden" style="margin-right:auto;background:#f59e0b;color:#fff;padding:2px 9px;border-radius:50%;font-size:11px;font-weight:800;">0</span>
                 </button>
             </nav>
 
@@ -1266,7 +1282,7 @@
                             <div class="row-2">
                                 <div class="form-group">
                                     <label>رقم الهاتف (للدخول)</label>
-                                    <input type="tel" id="driver-phone" placeholder="01000000000">
+                                    <input type="tel" id="driver-phone" placeholder="01xxxxxxxxx" inputmode="numeric" maxlength="11" oninput="window.restrictPhoneInput(this)">
                                 </div>
                                 <div class="form-group">
                                     <label>كلمة المرور</label>
@@ -1310,10 +1326,79 @@
                                         <th>الطيار</th>
                                         <th>رقم الهاتف</th>
                                         <th>كلمة المرور</th>
+                                        <th>التقييم</th>
                                         <th>إجراء</th>
                                     </tr>
                                 </thead>
                                 <tbody id="drivers-table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- قسم العملاء -->
+                <section id="customers-section" class="section">
+                    <div class="section-header">
+                        <div>
+                            <h2>إدارة العملاء 👥</h2>
+                            <p>قائمة جميع العملاء المسجلين في التطبيق + إشعارات التسجيل الجديد</p>
+                        </div>
+                        <div style="display:flex;gap:10px;align-items:center;">
+                            <span id="new-customers-badge" class="hidden" style="background:var(--danger-light);color:var(--danger);padding:6px 14px;border-radius:12px;font-weight:800;font-size:13px;">
+                                🔔 تسجيلات جديدة: <span id="new-customers-count">0</span>
+                            </span>
+                            <button class="btn btn-primary btn-sm" onclick="window.markAllCustomersSeen()">✓ تحديد الكل كمقروء</button>
+                        </div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card orders">
+                            <div class="stat-icon">👥</div>
+                            <div class="stat-label">إجمالي العملاء</div>
+                            <div class="stat-value" id="cust-total">0</div>
+                            <div class="stat-trend stable">✅ مسجل</div>
+                        </div>
+                        <div class="stat-card revenue">
+                            <div class="stat-icon">🆕</div>
+                            <div class="stat-label">جديد اليوم</div>
+                            <div class="stat-value" id="cust-today">0</div>
+                            <div class="stat-trend up">📈 تسجيل</div>
+                        </div>
+                        <div class="stat-card drivers">
+                            <div class="stat-icon">📦</div>
+                            <div class="stat-label">أكثر العملاء طلباً</div>
+                            <div class="stat-value" id="cust-top" style="font-size:16px;">--</div>
+                            <div class="stat-trend stable">🏆 الأكثر نشاطاً</div>
+                        </div>
+                        <div class="stat-card rest">
+                            <div class="stat-icon">📍</div>
+                            <div class="stat-label">منطقة القناطر</div>
+                            <div class="stat-value" id="cust-local">0</div>
+                            <div class="stat-trend stable">🏘️ عملاء المحلة</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 class="card-title">
+                            <span class="card-title-icon">👥</span>
+                            قائمة العملاء المسجلين
+                        </h3>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>العميل</th>
+                                        <th>الهاتف</th>
+                                        <th>العنوان</th>
+                                        <th>عدد الطلبات</th>
+                                        <th>تاريخ التسجيل</th>
+                                        <th>حالة</th>
+                                        <th>إجراءات</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="customers-table-body">
+                                    <tr><td colspan="7" style="text-align:center;padding:40px;color:var(--medium-text);">جاري تحميل العملاء...</td></tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -1336,13 +1421,88 @@
                                         <th>رقم الطلب</th>
                                         <th>العميل</th>
                                         <th>الطيار</th>
+                                        <th>التقييم</th>
                                         <th>الإجمالي</th>
                                         <th>التاريخ</th>
                                         <th>إجراء</th>
                                     </tr>
                                 </thead>
                                 <tbody id="archive-table-body">
-                                    <tr><td colspan="6" style="text-align: center; padding: 40px; color: var(--medium-text);">جاري تحميل الأرشيف...</td></tr>
+                                    <tr><td colspan="7" style="text-align: center; padding: 40px; color: var(--medium-text);">جاري تحميل الأرشيف...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- قسم التقييمات والفيدباك -->
+                <section id="feedbacks-section" class="section">
+                    <div class="section-header">
+                        <div>
+                            <h2>التقييمات والفيدباك من العملاء ⭐</h2>
+                            <p>متابعة تقييمات العملاء لطياري الدليفري، ومعرفة نقاط الضعف لتحسين الأداء</p>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="filters-row">
+                            <div class="form-group" style="flex:1;min-width:220px;">
+                                <label>فلترة حسب الطيار</label>
+                                <select id="feedback-driver-filter" onchange="window.renderFeedbacks()">
+                                    <option value="all">جميع الطيارين</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="flex:1;min-width:200px;">
+                                <label>فلترة حسب التقييم</label>
+                                <select id="feedback-rating-filter" onchange="window.renderFeedbacks()">
+                                    <option value="all">جميع التقييمات</option>
+                                    <option value="5">5 نجوم — ممتاز</option>
+                                    <option value="4">4 نجوم — جيد جدًا</option>
+                                    <option value="3">3 نجوم — جيد</option>
+                                    <option value="2">2 نجوم — ضعيف</option>
+                                    <option value="1">1 نجمة — سيء</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="flex:1;min-width:260px;">
+                                <label>بحث سريع</label>
+                                <input type="text" id="feedback-search" placeholder="اسم العميل / الطيار / كلمة في التعليق..." oninput="window.renderFeedbacks()">
+                            </div>
+                        </div>
+
+                        <div class="feedbacks-stats" style="display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin:20px 0 25px;">
+                            <div class="stat-mini" style="background:linear-gradient(135deg,#fef3c7,#fde68a);border-radius:14px;padding:14px;">
+                                <p style="margin:0;color:#92400e;font-size:12px;font-weight:700;">إجمالي التقييمات</p>
+                                <h3 id="stat-fb-total" style="margin:6px 0 0;color:#78350f;font-size:22px;">0</h3>
+                            </div>
+                            <div class="stat-mini" style="background:linear-gradient(135deg,#dcfce7,#bbf7d0);border-radius:14px;padding:14px;">
+                                <p style="margin:0;color:#166534;font-size:12px;font-weight:700;">المعدل الكلي</p>
+                                <h3 id="stat-fb-avg" style="margin:6px 0 0;color:#166534;font-size:22px;">0.0 ★</h3>
+                            </div>
+                            <div class="stat-mini" style="background:linear-gradient(135deg,#e0e7ff,#c7d2fe);border-radius:14px;padding:14px;">
+                                <p style="margin:0;color:#3730a3;font-size:12px;font-weight:700;">5 نجوم</p>
+                                <h3 id="stat-fb-5star" style="margin:6px 0 0;color:#3730a3;font-size:22px;">0</h3>
+                            </div>
+                            <div class="stat-mini" style="background:linear-gradient(135deg,#fee2e2,#fecaca);border-radius:14px;padding:14px;">
+                                <p style="margin:0;color:#991b1b;font-size:12px;font-weight:700;">تقييمات منخفضة (≤2)</p>
+                                <h3 id="stat-fb-low" style="margin:6px 0 0;color:#991b1b;font-size:22px;">0</h3>
+                            </div>
+                        </div>
+
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>التقييم</th>
+                                        <th>الطيار</th>
+                                        <th>العميل</th>
+                                        <th>رقم الطلب</th>
+                                        <th>التعليق / الفيدباك</th>
+                                        <th>التاريخ</th>
+                                        <th>إجراء</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="feedbacks-table-body">
+                                    <tr><td colspan="7" style="text-align: center; padding: 40px; color: var(--medium-text);">جاري تحميل التقييمات...</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -1372,20 +1532,26 @@
     <!-- كود Firebase والمنطق البرمجي -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, onSnapshot, updateDoc, doc, deleteDoc, query, orderBy, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, onSnapshot, updateDoc, doc, deleteDoc, deleteField, query, orderBy, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyDHRBlNeJ_TWe_ypUaEkgruhnbt0fjuH8M",
-            authDomain: "delivery-c2b83.firebaseapp.com",
-            databaseURL: "https://delivery-c2b83-default-rtdb.firebaseio.com",
-            projectId: "delivery-c2b83",
-            storageBucket: "delivery-c2b83.firebasestorage.app",
-            messagingSenderId: "202115203824",
-            appId: "1:202115203824:web:8717748c8bd7bff3aff835"
+            apiKey: "AIzaSyAis4G-tc2NkT9nrn4VpB39mDVqPILqTpA",
+            authDomain: "saroo5-ab72a.firebaseapp.com",
+            projectId: "saroo5-ab72a",
+            storageBucket: "saroo5-ab72a.firebasestorage.app",
+            messagingSenderId: "265152576253",
+            appId: "1:265152576253:web:38d3104acc701b3fd19c94",
+            measurementId: "G-HC4G1LQSEY"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        let app, db;
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+        } catch (error) {
+            console.error('Firebase initialization error:', error);
+            showToast('خطأ في الاتصال', 'تعذر الاتصال بقاعدة البيانات. حاول تحديث الصفحة.', 'error');
+        }
 
         let driversList = [];
         let restaurantsList = [];
@@ -1395,14 +1561,63 @@
         let globalSearchTerm = '';
         let ordersInitialized = false;
 
-        function notifyUser(title, message) {
+        async function requestAppPermissions() {
+            try {
+                const LocalNotifications = window.Capacitor?.Plugins?.LocalNotifications;
+                if (LocalNotifications) {
+                    try {
+                        await LocalNotifications.requestPermissions();
+                    } catch (e) {
+                        console.error('Error requesting notification permissions:', e);
+                    }
+                } else if ('Notification' in window && Notification.permission === 'default') {
+                    try {
+                        await Notification.requestPermission();
+                    } catch (e) {
+                        console.error('Error requesting browser notification permissions:', e);
+                    }
+                }
+            } catch (error) {
+                console.error('Error in requestAppPermissions:', error);
+            }
+        }
+
+        async function notifyUser(title, message) {
             showToast(title, message, 'info');
-            if ('Notification' in window && Notification.permission === 'granted') {
-                new Notification(title, { body: message, icon: 'Orange Modern Food Delivery Service Instagram Post.png', tag: title });
-            } else if ('Notification' in window && Notification.permission === 'default') {
-                Notification.requestPermission().then(permission => {
-                    if (permission === 'granted') new Notification(title, { body: message, tag: title });
-                }).catch(() => {});
+            try {
+                const LocalNotifications = window.Capacitor?.Plugins?.LocalNotifications;
+                if (LocalNotifications) {
+                    try {
+                        await LocalNotifications.schedule({
+                            notifications: [{
+                                id: Math.floor(Math.random() * 2147483647),
+                                title,
+                                body: message,
+                                sound: 'default'
+                            }]
+                        });
+                        return;
+                    } catch (e) {
+                        console.error('Error scheduling local notification:', e);
+                    }
+                }
+            } catch (e) {
+                console.error('Error in notifyUser (Capacitor):', e);
+            }
+            
+            try {
+                if ('Notification' in window) {
+                    if (Notification.permission === 'granted') {
+                        new Notification(title, { body: message, icon: 'Orange Modern Food Delivery Service Instagram Post.png', tag: title });
+                    } else if (Notification.permission === 'default') {
+                        const permission = await Notification.requestPermission();
+                        if (permission === 'granted') {
+                            new Notification(title, { body: message, icon: 'Orange Modern Food Delivery Service Instagram Post.png', tag: title });
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error('Error in notifyUser (browser):', e);
             }
         }
 
@@ -1429,10 +1644,12 @@
         /* ========== التنقل بين الأقسام ========== */
         const pageTitles = {
             'orders-section': { t: 'إدارة الطلبات 📦', s: 'متابعة وتوجيه الطلبات الجديدة' },
+            'customers-section': { t: 'إدارة العملاء 👥', s: 'قائمة العملاء ومتابعة التسجيلات الجديدة' },
             'dashboard-section': { t: 'لوحة الإحصائيات 📊', s: 'نظرة شاملة على أداء النظام' },
             'restaurants-section': { t: 'المحلات والمنتجات 🛒', s: 'إضافة وتعديل محلات السوق والمنتجات' },
             'drivers-section': { t: 'إدارة الطيارين 🛵', s: 'إضافة وتعديل بيانات الطيارين' },
-            'archive-section': { t: 'أرشيف الطلبات 📁', s: 'سجل الطلبات المنتهية' }
+            'archive-section': { t: 'أرشيف الطلبات 📁', s: 'سجل الطلبات المنتهية' },
+            'feedbacks-section': { t: 'التقييمات والفيدباك ⭐', s: 'متابعة تقييم العملاء للطيارين' }
         };
 
         window.openTab = function(tabId, btnElement) {
@@ -1455,6 +1672,8 @@
             renderArchive();
             renderProductsTable();
             renderDrivers();
+            if (window.renderFeedbacks) window.renderFeedbacks();
+            if (typeof renderCustomers === 'function') renderCustomers();
         };
 
         window.clearGlobalSearch = function() {
@@ -1465,6 +1684,8 @@
             renderArchive();
             renderProductsTable();
             renderDrivers();
+            if (window.renderFeedbacks) window.renderFeedbacks();
+            if (typeof renderCustomers === 'function') renderCustomers();
         };
 
         function matchesGlobal(text) {
@@ -1485,14 +1706,27 @@
         };
 
         /* ========== إدارة الطيارين ========== */
+        function validatePhone(phone) {
+            const digits = String(phone || '').replace(/\D/g, '');
+            return digits.length === 11 && /^01[0125]\d{8}$/.test(digits);
+        }
+
+        window.restrictPhoneInput = function(input) {
+            input.value = input.value.replace(/\D/g, '').slice(0, 11);
+        };
+
         window.addDriver = async function() {
             const name = document.getElementById('driver-name').value.trim();
-            const phone = document.getElementById('driver-phone').value.trim();
+            const phone = document.getElementById('driver-phone').value.replace(/\D/g, '');
             const pass = document.getElementById('driver-pass').value.trim();
             const vehicle = document.getElementById('driver-vehicle').value.trim();
 
-            if(!name || !phone || !pass) {
+            if(!name || !pass) {
                 showToast('بيانات ناقصة!', 'أكمل جميع بيانات الطيار', 'error');
+                return;
+            }
+            if (!validatePhone(phone)) {
+                showToast('رقم غير صحيح!', 'رقم الهاتف لازم يكون 11 رقم ويبدأ بـ 01', 'error');
                 return;
             }
 
@@ -1525,13 +1759,15 @@
             );
 
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; padding:30px; color:var(--medium-text)">لا يوجد بيانات</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:30px; color:var(--medium-text)">لا يوجد بيانات</td></tr>`;
                 return;
             }
 
             tbody.innerHTML = '';
             filtered.forEach((d) => {
                 const initials = d.name ? d.name.charAt(0) : '؟';
+                const count = d.ratingsCount || 0;
+                const avg = count ? (d.ratingsSum / count).toFixed(1) : '—';
                 tbody.innerHTML += `
                     <tr>
                         <td>
@@ -1545,6 +1781,10 @@
                         </td>
                         <td><a href="tel:${d.phone}" style="color:var(--info); font-weight:700; text-decoration:none;">${escapeHtml(d.phone)}</a></td>
                         <td><code style="background:#f3f4f6; padding:3px 8px; border-radius:6px;">${escapeHtml(d.password)}</code></td>
+                        <td>
+                            <div style="font-weight:800;color:#f59e0b;">${count ? '★ ' + avg : 'بدون تقييم'}</div>
+                            ${d.lastFeedback ? `<div style="font-size:11px;color:var(--medium-text);margin-top:4px;">"${escapeHtml(d.lastFeedback)}"</div>` : ''}
+                        </td>
                         <td class="actions-cell">
                             <button class="btn btn-danger btn-sm" onclick="window.deleteDriver('${d.id}')">🗑️ حذف</button>
                         </td>
@@ -1831,6 +2071,7 @@
 
                 renderOrders();
                 renderArchive();
+                window.renderFeedbacks();
             });
         }
 
@@ -1922,7 +2163,7 @@
             });
 
             if (delivered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; padding:50px; color:var(--medium-text)">
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding:50px; color:var(--medium-text)">
                     <div style="font-size:48px; margin-bottom:10px;">📭</div>
                     الأرشيف فارغ حالياً
                 </td></tr>`;
@@ -1947,6 +2188,10 @@
                             </div>
                         </td>
                         <td style="font-weight:700;">🛵 ${escapeHtml(order.driverName || '—')}</td>
+                        <td>
+                            ${order.feedback ? `<div style="color:#f59e0b;font-weight:800;">${'★'.repeat(order.feedback.rating || 0)}${'☆'.repeat(5 - (order.feedback.rating || 0))}</div>
+                            ${order.feedback.comment ? `<div style="font-size:12px;color:var(--medium-text);margin-top:4px;">${escapeHtml(order.feedback.comment)}</div>` : ''}` : '<span style="color:var(--medium-text)">بدون تقييم</span>'}
+                        </td>
                         <td class="price-cell">${order.totalPrice || 0} ج.م</td>
                         <td style="color:var(--medium-text); font-size:13px;">${date}</td>
                         <td class="actions-cell">
@@ -1971,7 +2216,7 @@
 
             await updateDoc(doc(db, "Orders", orderId), {
                 driverId: driverId,
-                driverName: driverName,
+                driverName: driver?.name || driverName,
                 driverPhone: driver?.phone || '',
                 driverVehicle: driver?.vehicle || '',
                 status: 'on_the_way',
@@ -2023,6 +2268,19 @@
                     <span class="label">الطيار المسؤول</span>
                     <span class="value">${order.driverName ? '🛵 ' + escapeHtml(order.driverName) : '<span style="color:var(--warning)">غير محدد بعد</span>'}</span>
                 </div>
+                ${order.driverPhone ? `<div class="order-detail-row">
+                    <span class="label">هاتف الطيار</span>
+                    <span class="value"><a href="tel:${order.driverPhone}" style="color:var(--info)">${escapeHtml(order.driverPhone)}</a></span>
+                </div>` : ''}
+                ${order.feedback ? `
+                <div class="order-detail-row">
+                    <span class="label">تقييم العميل</span>
+                    <span class="value" style="color:#f59e0b;font-weight:800;">${'★'.repeat(order.feedback.rating || 0)}${'☆'.repeat(5 - (order.feedback.rating || 0))}</span>
+                </div>
+                <div class="order-detail-row">
+                    <span class="label">تعليق العميل</span>
+                    <span class="value">${escapeHtml(order.feedback.comment || 'بدون تعليق')}</span>
+                </div>` : ''}
                 <div class="order-detail-row">
                     <span class="label">التوقيت</span>
                     <span class="value" style="font-size:13px; color:var(--medium-text);">${order.timestamp ? new Date(order.timestamp).toLocaleString('ar-EG') : '—'}</span>
@@ -2058,6 +2316,85 @@
             document.getElementById('order-modal').classList.remove('visible');
         };
 
+        function getFeedbackOrders() {
+            return ordersList.filter(o => o.feedback && Number(o.feedback.rating) > 0);
+        }
+
+        window.renderFeedbacks = function() {
+            const tbody = document.getElementById('feedbacks-table-body');
+            if (!tbody) return;
+
+            const list = getFeedbackOrders();
+            const driverSel = document.getElementById('feedback-driver-filter');
+            const ratingFilter = document.getElementById('feedback-rating-filter')?.value || 'all';
+            const search = (document.getElementById('feedback-search')?.value || '').toLowerCase().trim();
+            const currentDriver = driverSel ? driverSel.value : 'all';
+
+            if (driverSel) {
+                const names = [...new Set(list.map(o => o.feedback.driverName || o.driverName || '').filter(Boolean))];
+                driverSel.innerHTML = '<option value="all">جميع الطيارين</option>' +
+                    names.map(n => `<option value="${escapeHtml(n)}">${escapeHtml(n)}</option>`).join('');
+                driverSel.value = (currentDriver === 'all' || names.includes(currentDriver)) ? currentDriver : 'all';
+            }
+
+            const driverFilter = driverSel ? driverSel.value : 'all';
+            const filtered = list.filter(o => {
+                const fb = o.feedback;
+                const driverName = fb.driverName || o.driverName || '';
+                if (driverFilter !== 'all' && driverName !== driverFilter) return false;
+                if (ratingFilter !== 'all' && String(fb.rating) !== ratingFilter) return false;
+                const blob = [driverName, fb.customerName, o.customerName, o.orderNumber, fb.comment, fb.customerPhone].join(' ').toLowerCase();
+                return !search || blob.includes(search);
+            });
+
+            const total = list.length;
+            const avg = total ? (list.reduce((s, o) => s + Number(o.feedback.rating || 0), 0) / total).toFixed(1) : '0.0';
+            document.getElementById('stat-fb-total').innerText = total;
+            document.getElementById('stat-fb-avg').innerText = avg + ' ★';
+            document.getElementById('stat-fb-5star').innerText = list.filter(o => Number(o.feedback.rating) === 5).length;
+            document.getElementById('stat-fb-low').innerText = list.filter(o => Number(o.feedback.rating) <= 2).length;
+
+            const badge = document.getElementById('nav-feedbacks-badge');
+            if (badge) {
+                if (total > 0) {
+                    badge.innerText = total;
+                    badge.classList.remove('hidden');
+                } else {
+                    badge.classList.add('hidden');
+                }
+            }
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--medium-text);">لا يوجد تقييمات مطابقة</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(o => {
+                const fb = o.feedback;
+                const stars = '★'.repeat(Number(fb.rating) || 0) + '☆'.repeat(5 - (Number(fb.rating) || 0));
+                const when = fb.createdAt ? new Date(fb.createdAt).toLocaleString('ar-EG') : '—';
+                return `<tr>
+                    <td style="font-weight:800;color:#f59e0b;white-space:nowrap;">${stars} ${fb.rating}</td>
+                    <td>${escapeHtml(fb.driverName || o.driverName || '—')}</td>
+                    <td>${escapeHtml(fb.customerName || o.customerName || '—')}<div style="font-size:11px;color:var(--medium-text);">${escapeHtml(fb.customerPhone || o.customerPhone || '')}</div></td>
+                    <td>#${escapeHtml(o.orderNumber || o.id)}</td>
+                    <td>${fb.comment ? escapeHtml(fb.comment) : '<span style="color:var(--medium-text);">بدون تعليق</span>'}</td>
+                    <td style="font-size:12px;color:var(--medium-text);">${when}</td>
+                    <td><button class="btn btn-danger btn-sm" onclick="window.deleteFeedback('${o.id}')">🗑️ حذف</button></td>
+                </tr>`;
+            }).join('');
+        };
+
+        window.deleteFeedback = async function(orderId) {
+            if (!confirm('هل تريد حذف هذا التقييم؟')) return;
+            try {
+                await updateDoc(doc(db, 'Orders', orderId), { feedback: deleteField() });
+                showToast('تم الحذف', 'تم حذف التقييم', 'info');
+            } catch (_) {
+                showToast('خطأ', 'تعذر حذف التقييم', 'error');
+            }
+        };
+
         function escapeHtml(str) {
             if (!str) return '';
             const div = document.createElement('div');
@@ -2065,12 +2402,207 @@
             return div.innerHTML;
         }
 
+        /* ========== إدارة العملاء ========== */
+        let customersList = [];
+        let customersInitialized = false;
+        let newCustomersCount = 0;
+
+        function loadCustomers() {
+            try {
+                const q = query(collection(db, "Customers"), orderBy("createdAt", "desc"));
+                onSnapshot(q, (snapshot) => {
+                    try {
+                        customersList = [];
+                        snapshot.forEach(d => customersList.push({ id: d.id, ...d.data() }));
+
+                        if (customersInitialized) {
+                            snapshot.docChanges().forEach(change => {
+                                if (change.type === 'added') {
+                                    const c = change.doc.data();
+                                    if (c.isNew === true) {
+                                        newCustomersCount++;
+                                        notifyUser('عميل جديد 🎉', `سجل ${c.name || 'عميل'} في التطبيق الآن`);
+                                    }
+                                }
+                            });
+                        }
+                        customersInitialized = true;
+                        updateNewCustomersBadge();
+                        renderCustomers();
+                        renderCustomerStats();
+                    } catch (error) {
+                        console.error('Error processing customers snapshot:', error);
+                    }
+                }, (error) => {
+                    console.error('Error loading customers:', error);
+                });
+            } catch (error) {
+                console.error('Error setting up customers listener:', error);
+            }
+        }
+
+        function updateNewCustomersBadge() {
+            const unseen = customersList.filter(c => c.isNew === true).length;
+            newCustomersCount = unseen;
+            const badge = document.getElementById('nav-customers-badge');
+            const topBadge = document.getElementById('new-customers-badge');
+            const topCount = document.getElementById('new-customers-count');
+            if (unseen > 0) {
+                badge.innerText = unseen;
+                badge.classList.remove('hidden');
+                topBadge.classList.remove('hidden');
+                topCount.innerText = unseen;
+            } else {
+                badge.classList.add('hidden');
+                topBadge.classList.add('hidden');
+            }
+        }
+
+        window.markAllCustomersSeen = async function() {
+            for (const c of customersList) {
+                if (c.isNew === true) {
+                    try { await updateDoc(doc(db, "Customers", c.id), { isNew: false }); } catch (_) {}
+                }
+            }
+            showToast('تم التحديث', 'تم تحديد كل العملاء كمقروءة', 'success');
+        };
+
+        function renderCustomerStats() {
+            const today = new Date().setHours(0,0,0,0);
+            const todayCust = customersList.filter(c => (c.createdAt || 0) >= today).length;
+            const localCust = customersList.filter(c => /(قناطر|شبرا|خانة|طنطا|زفتى|محلة|بلقاس|سمين|القاهره|طوخ|كفر|بندر)/i.test(c.address || '')).length;
+
+            const orderCounts = {};
+            ordersList.forEach(o => { orderCounts[o.customerPhone] = (orderCounts[o.customerPhone] || 0) + 1; });
+            let topCustomer = '--';
+            let topCount = 0;
+            customersList.forEach(c => {
+                const cnt = orderCounts[c.phone] || 0;
+                if (cnt > topCount) { topCount = cnt; topCustomer = c.name + ' (' + cnt + ')'; }
+            });
+
+            document.getElementById('cust-total').innerText = customersList.length;
+            document.getElementById('cust-today').innerText = todayCust;
+            document.getElementById('cust-local').innerText = localCust || customersList.length;
+            document.getElementById('cust-top').innerText = topCount > 0 ? topCustomer : 'لا طلبات بعد';
+        }
+
+        function renderCustomers() {
+            const tbody = document.getElementById('customers-table-body');
+            let filtered = customersList.filter(c =>
+                matchesGlobal(c.name) || matchesGlobal(c.phone) || matchesGlobal(c.address || '')
+            );
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--medium-text);">
+                    <div style="font-size:42px;margin-bottom:8px;">👥</div>
+                    لا يوجد عملاء مسجلين بعد
+                </td></tr>`;
+                return;
+            }
+
+            const orderCounts = {};
+            ordersList.forEach(o => { orderCounts[o.customerPhone] = (orderCounts[o.customerPhone] || 0) + 1; });
+
+            tbody.innerHTML = '';
+            filtered.forEach(c => {
+                const initials = c.name ? c.name.charAt(0) : '؟';
+                const orderCount = orderCounts[c.phone] || 0;
+                const regDate = c.createdAt ? new Date(c.createdAt).toLocaleDateString('ar-EG') : '—';
+                const isNew = c.isNew === true;
+                const photo = c.photo || '';
+                tbody.innerHTML += `
+                    <tr style="${isNew ? 'background:linear-gradient(90deg,#fff7ed 0%,transparent 30%);' : ''}">
+                        <td>
+                            <div class="customer-cell">
+                                ${photo ? `<img src="${photo}" alt="" style="width:38px;height:38px;border-radius:50%;object-fit:cover;border:2px solid var(--border);">` : `<div class="customer-avatar">${initials}</div>`}
+                                <div class="customer-meta">
+                                    <h4>${escapeHtml(c.name)}</h4>
+                                    ${isNew ? `<p style="color:var(--primary-orange);font-weight:800;">🆕 مسجل جديد</p>` : `<p>👥 عميل</p>`}
+                                </div>
+                            </div>
+                        </td>
+                        <td style="white-space:nowrap;">
+                            <div style="display:flex;gap:6px;align-items:center;">
+                                <a href="tel:${c.phone}" style="color:var(--info);font-weight:800;text-decoration:none;">📞 ${escapeHtml(c.phone)}</a>
+                                <a href="https://wa.me/2${c.phone}" target="_blank" title="واتساب" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:10px;background:var(--gradient-whatsapp);color:#fff;text-decoration:none;font-size:15px;box-shadow:0 2px 8px rgba(37,211,102,0.3);">💬</a>
+                            </div>
+                        </td>
+                        <td style="max-width:260px;font-size:13px;">
+                            ${c.address ? escapeHtml(c.address) : '<span style="color:var(--medium-text);">غير محدد</span>'}
+                            ${c.location?.mapsUrl ? `<div><a href="${c.location.mapsUrl}" target="_blank" style="color:var(--info);font-size:11px;font-weight:800;">📍 عرض الموقع</a></div>` : ''}
+                        </td>
+                        <td>
+                            <span style="display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:10px;font-weight:800;font-size:12px;${orderCount > 3 ? 'background:var(--success-light);color:var(--success);' : 'background:#f3f4f6;color:var(--medium-text);'}">
+                                📦 ${orderCount} طلب
+                            </span>
+                        </td>
+                        <td style="font-size:12px;color:var(--medium-text);">${regDate}</td>
+                        <td>
+                            ${isNew ? `<span class="status-badge status-pending">🆕 جديد</span>` : `<span class="status-badge status-active">✅ نشط</span>`}
+                        </td>
+                        <td class="actions-cell">
+                            ${isNew ? `<button class="btn btn-success btn-sm" onclick="window.markCustomerSeen('${c.id}')">✓ مقروء</button>` : ''}
+                            <button class="btn btn-danger btn-sm" onclick="window.deleteCustomer('${c.id}')">🗑️ حذف</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        window.markCustomerSeen = async function(id) {
+            try {
+                await updateDoc(doc(db, "Customers", id), { isNew: false });
+                showToast('تم التحديث', 'تم تحديد العميل كمقروء', 'success');
+            } catch (_) {}
+        };
+
+        window.deleteCustomer = async function(id) {
+            if (confirm('هل أنت متأكد من حذف هذا العميل من القائمة؟')) {
+                try {
+                    await deleteDoc(doc(db, "Customers", id));
+                    showToast('تم الحذف', 'تم حذف العميل بنجاح', 'info');
+                } catch (_) {}
+            }
+        };
+
         // تشغيل الدوال عند تحميل الصفحة
         document.addEventListener("DOMContentLoaded", () => {
-            loadDrivers();
-            loadRestaurants();
-            loadProductsForPricing();
-            loadOrders();
+            try {
+                requestAppPermissions();
+            } catch (error) {
+                console.error('Error requesting permissions:', error);
+            }
+            
+            try {
+                loadDrivers();
+            } catch (error) {
+                console.error('Error loading drivers:', error);
+            }
+            
+            try {
+                loadRestaurants();
+            } catch (error) {
+                console.error('Error loading restaurants:', error);
+            }
+            
+            try {
+                loadProductsForPricing();
+            } catch (error) {
+                console.error('Error loading products:', error);
+            }
+            
+            try {
+                loadOrders();
+            } catch (error) {
+                console.error('Error loading orders:', error);
+            }
+            
+            try {
+                loadCustomers();
+            } catch (error) {
+                console.error('Error loading customers:', error);
+            }
         });
     </script>
 

@@ -3,10 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#ff6b35">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="كابتن الصاروووخ">
+    <link rel="icon" type="image/png" href="Orange Modern Food Delivery Service Instagram Post.png">
+    <link rel="apple-touch-icon" href="Orange Modern Food Delivery Service Instagram Post.png">
     <title>🛵 كابتن الصاروووخ | توصيل طلبات السوق</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-orange: #ff6b35;
@@ -22,6 +27,7 @@
             --warning-light: #fef3c7;
             --info: #3b82f6;
             --info-light: #dbeafe;
+            --whatsapp: #25d366;
             --dark-text: #1a1a2e;
             --medium-text: #6b7280;
             --border: #e5e7eb;
@@ -32,13 +38,14 @@
             --gradient-orange: linear-gradient(135deg, #ff6b35 0%, #ff8c42 50%, #ffb347 100%);
             --gradient-green: linear-gradient(135deg, #10b981 0%, #059669 100%);
             --gradient-blue: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            --gradient-whatsapp: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
         }
 
         * { -webkit-tap-highlight-color: transparent; box-sizing: border-box; }
 
         body {
             margin: 0;
-            font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Tajawal', 'Almarai', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--light-bg);
             color: var(--dark-text);
             min-height: 100vh;
@@ -183,21 +190,42 @@
             color: white;
             text-decoration: none;
             text-align: center;
-            padding: 16px 18px;
+            padding: 16px 12px;
             border-radius: 14px;
             font-weight: 700;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
+            gap: 4px;
             flex: 1;
             box-sizing: border-box;
             box-shadow: 0 4px 16px rgba(59,130,246,0.35);
             transition: all 0.2s ease;
-            font-size: 16px;
+            font-size: 14px;
         }
 
         .call-btn:active { transform: scale(0.97); }
+
+        .whatsapp-btn {
+            background: var(--gradient-whatsapp);
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            padding: 16px 12px;
+            border-radius: 14px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            flex: 1;
+            box-sizing: border-box;
+            box-shadow: 0 4px 16px rgba(37,211,102,0.35);
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+
+        .whatsapp-btn:active { transform: scale(0.97); }
 
         /* ========== واجهة التطبيق للطيار ========== */
         #driver-app {
@@ -869,7 +897,7 @@
             
             <div class="input-field">
                 <span class="field-icon">📞</span>
-                <input type="tel" id="login-phone" placeholder="رقم الهاتف" required>
+                <input type="tel" id="login-phone" placeholder="01xxxxxxxxx" inputmode="numeric" maxlength="11" pattern="[0-9]{11}" required oninput="window.restrictPhoneInput(this)">
             </div>
             <div class="input-field">
                 <span class="field-icon">🔐</span>
@@ -980,17 +1008,23 @@
         import { getFirestore, collection, query, where, getDocs, getDoc, onSnapshot, doc, updateDoc, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyDHRBlNeJ_TWe_ypUaEkgruhnbt0fjuH8M",
-            authDomain: "delivery-c2b83.firebaseapp.com",
-            databaseURL: "https://delivery-c2b83-default-rtdb.firebaseio.com",
-            projectId: "delivery-c2b83",
-            storageBucket: "delivery-c2b83.firebasestorage.app",
-            messagingSenderId: "202115203824",
-            appId: "1:202115203824:web:8717748c8bd7bff3aff835"
+            apiKey: "AIzaSyAis4G-tc2NkT9nrn4VpB39mDVqPILqTpA",
+            authDomain: "saroo5-ab72a.firebaseapp.com",
+            projectId: "saroo5-ab72a",
+            storageBucket: "saroo5-ab72a.firebasestorage.app",
+            messagingSenderId: "265152576253",
+            appId: "1:265152576253:web:38d3104acc701b3fd19c94",
+            measurementId: "G-HC4G1LQSEY"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        let app, db;
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+        } catch (error) {
+            console.error('Firebase initialization error:', error);
+            showToast('خطأ في الاتصال', 'تعذر الاتصال بقاعدة البيانات. حاول تحديث الصفحة.', 'error');
+        }
 
         let currentDriverId = null;
         let currentDriverName = '';
@@ -1000,14 +1034,168 @@
         let pendingOrderId = null;
         let ordersInitialized = false;
         let locationWatchId = null;
+        let capacitorWatchId = null;
         let lastLocationUpdate = 0;
 
-        function notifyUser(title, message) {
+        async function pushDriverLocation(latitude, longitude, accuracy) {
+            const now = Date.now();
+            if (now - lastLocationUpdate < 10000) return;
+            lastLocationUpdate = now;
+            const location = {
+                lat: Number(latitude.toFixed(6)),
+                lng: Number(longitude.toFixed(6)),
+                accuracy: Math.round(accuracy),
+                updatedAt: now,
+                mapsUrl: `https://www.google.com/maps?q=${latitude},${longitude}`
+            };
+            try {
+                await updateDoc(doc(db, 'Drivers', currentDriverId), { currentLocation: location, locationUpdatedAt: now });
+            } catch (error) {}
+        }
+
+        async function startDriverLocationTracking() {
+            if (!currentDriverId) return;
+            const CapGeo = window.Capacitor?.Plugins?.Geolocation;
+
+            if (CapGeo) {
+                try {
+                    const perm = await CapGeo.requestPermissions();
+                    if (perm.location === 'denied' || perm.location === 'permanently_denied') {
+                        showToast('الموقع مطلوب', 'اسمح بالموقع حتى يرى العميل مكان الكابتن أثناء التوصيل', 'error');
+                        return;
+                    }
+                    if (capacitorWatchId) {
+                        try {
+                            await CapGeo.clearWatch({ id: capacitorWatchId });
+                        } catch (e) {
+                            console.error('Error clearing watch:', e);
+                        }
+                    }
+                    capacitorWatchId = await CapGeo.watchPosition({
+                        enableHighAccuracy: true,
+                        timeout: 15000
+                    }, (position, err) => {
+                        if (err || !position) {
+                            console.error('Geolocation error:', err);
+                            return;
+                        }
+                        if (position.coords && position.coords.latitude && position.coords.longitude) {
+                            pushDriverLocation(position.coords.latitude, position.coords.longitude, position.coords.accuracy || 0);
+                        }
+                    });
+                    return;
+                } catch (error) {
+                    console.error('Capacitor geolocation error:', error);
+                }
+            }
+
+            if (!navigator.geolocation) {
+                showToast('الموقع غير مدعوم', 'المتصفح لا يدعم تحديد الموقع', 'error');
+                return;
+            }
+            
+            if (locationWatchId !== null) {
+                try {
+                    navigator.geolocation.clearWatch(locationWatchId);
+                } catch (e) {
+                    console.error('Error clearing browser watch:', e);
+                }
+            }
+            
+            locationWatchId = navigator.geolocation.watchPosition(
+                async position => {
+                    if (position.coords && position.coords.latitude && position.coords.longitude) {
+                        await pushDriverLocation(position.coords.latitude, position.coords.longitude, position.coords.accuracy || 0);
+                    }
+                }, 
+                error => {
+                    console.error('Browser geolocation error:', error);
+                    if (error.code === 1) {
+                        showToast('الموقع مطلوب', 'اسمح بالموقع حتى يرى العميل مكان الكابتن أثناء التوصيل', 'error');
+                    } else if (error.code === 2) {
+                        showToast('خطأ في الموقع', 'تعذر تحديد الموقع حالياً', 'error');
+                    } else if (error.code === 3) {
+                        showToast('انتهى وقت الموقع', 'استغرق تحديد الموقع وقتاً طويلاً', 'error');
+                    }
+                }, 
+                { enableHighAccuracy: true, maximumAge: 5000, timeout: 15000 }
+            );
+        }
+
+        function validatePhone(phone) {
+            const digits = String(phone || '').replace(/\D/g, '');
+            return digits.length === 11 && /^01[0125]\d{8}$/.test(digits);
+        }
+
+        window.restrictPhoneInput = function(input) {
+            input.value = input.value.replace(/\D/g, '').slice(0, 11);
+        };
+
+        async function requestAppPermissions() {
+            try {
+                const LocalNotifications = window.Capacitor?.Plugins?.LocalNotifications;
+                if (LocalNotifications) {
+                    try {
+                        await LocalNotifications.requestPermissions();
+                    } catch (e) {
+                        console.error('Error requesting notification permissions:', e);
+                    }
+                } else if ('Notification' in window && Notification.permission === 'default') {
+                    try {
+                        await Notification.requestPermission();
+                    } catch (e) {
+                        console.error('Error requesting browser notification permissions:', e);
+                    }
+                }
+                const CapGeo = window.Capacitor?.Plugins?.Geolocation;
+                if (CapGeo) {
+                    try {
+                        await CapGeo.requestPermissions();
+                    } catch (e) {
+                        console.error('Error requesting geolocation permissions:', e);
+                    }
+                }
+            } catch (error) {
+                console.error('Error in requestAppPermissions:', error);
+            }
+        }
+
+        async function notifyUser(title, message) {
             showToast(title, message, 'info');
-            if ('Notification' in window && Notification.permission === 'granted') {
-                new Notification(title, { body: message, icon: 'Orange Modern Food Delivery Service Instagram Post.png', tag: title });
-            } else if ('Notification' in window && Notification.permission === 'default') {
-                Notification.requestPermission().catch(() => {});
+            try {
+                const LocalNotifications = window.Capacitor?.Plugins?.LocalNotifications;
+                if (LocalNotifications) {
+                    try {
+                        await LocalNotifications.schedule({
+                            notifications: [{
+                                id: Math.floor(Math.random() * 2147483647),
+                                title,
+                                body: message,
+                                sound: 'default'
+                            }]
+                        });
+                        return;
+                    } catch (e) {
+                        console.error('Error scheduling local notification:', e);
+                    }
+                }
+            } catch (e) {
+                console.error('Error in notifyUser (Capacitor):', e);
+            }
+            
+            try {
+                if ('Notification' in window) {
+                    if (Notification.permission === 'granted') {
+                        new Notification(title, { body: message, icon: 'Orange Modern Food Delivery Service Instagram Post.png', tag: title });
+                    } else if (Notification.permission === 'default') {
+                        const permission = await Notification.requestPermission();
+                        if (permission === 'granted') {
+                            new Notification(title, { body: message, icon: 'Orange Modern Food Delivery Service Instagram Post.png', tag: title });
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error('Error in notifyUser (browser):', e);
             }
         }
 
@@ -1033,6 +1221,7 @@
 
         /* ========== التحقق من حالة تسجيل الدخول ========== */
         document.addEventListener("DOMContentLoaded", async () => {
+            requestAppPermissions();
             const savedDriverId = localStorage.getItem("elsarokh_driverId");
             const savedDriverName = localStorage.getItem("elsarokh_driverName");
 
@@ -1056,12 +1245,16 @@
 
         /* ========== تسجيل الدخول ========== */
         window.loginDriver = async function() {
-            const phone = document.getElementById('login-phone').value.trim();
+            const phone = document.getElementById('login-phone').value.replace(/\D/g, '');
             const pass = document.getElementById('login-pass').value.trim();
             const btn = document.getElementById('login-btn');
 
-            if (!phone || !pass) {
-                showToast('بيانات ناقصة!', 'أدخل رقم الهاتف وكلمة المرور', 'error');
+            if (!validatePhone(phone)) {
+                showToast('رقم غير صحيح!', 'رقم الهاتف لازم يكون 11 رقم ويبدأ بـ 01', 'error');
+                return;
+            }
+            if (!pass) {
+                showToast('بيانات ناقصة!', 'أدخل كلمة المرور', 'error');
                 return;
             }
 
@@ -1079,13 +1272,18 @@
                     return;
                 }
 
-                querySnapshot.forEach((docSnap) => {
-                    const driverData = docSnap.data();
-                    currentDriverId = docSnap.id;
-                    currentDriverName = driverData.name;
-                    localStorage.setItem("elsarokh_driverId", docSnap.id);
-                    localStorage.setItem("elsarokh_driverName", driverData.name);
-                });
+                const docSnap = querySnapshot.docs.find(d => d.data().active !== false) || querySnapshot.docs[0];
+                const driverData = docSnap.data();
+                if (driverData.active === false) {
+                    showToast('الحساب متوقف', 'راجع الإدارة لتفعيل حساب الطيار', 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = '<span>🚀 تسجيل الدخول</span>';
+                    return;
+                }
+                currentDriverId = docSnap.id;
+                currentDriverName = driverData.name;
+                localStorage.setItem("elsarokh_driverId", docSnap.id);
+                localStorage.setItem("elsarokh_driverName", driverData.name);
 
                 showToast('أهلاً بك يا كابتن 👋', `تم تسجيل الدخول بنجاح يا ${currentDriverName}`, 'success');
                 setTimeout(() => enterDriverApp(), 400);
@@ -1106,28 +1304,6 @@
             startListeningToOrders();
         }
 
-        function startDriverLocationTracking() {
-            if (!navigator.geolocation || !currentDriverId) return;
-            if (locationWatchId !== null) navigator.geolocation.clearWatch(locationWatchId);
-            locationWatchId = navigator.geolocation.watchPosition(async position => {
-                const now = Date.now();
-                if (now - lastLocationUpdate < 10000) return;
-                lastLocationUpdate = now;
-                const location = {
-                    lat: Number(position.coords.latitude.toFixed(6)),
-                    lng: Number(position.coords.longitude.toFixed(6)),
-                    accuracy: Math.round(position.coords.accuracy),
-                    updatedAt: now,
-                    mapsUrl: `https://www.google.com/maps?q=${position.coords.latitude},${position.coords.longitude}`
-                };
-                try {
-                    await updateDoc(doc(db, 'Drivers', currentDriverId), { currentLocation: location, locationUpdatedAt: now });
-                } catch (error) {}
-            }, () => {
-                showToast('الموقع مطلوب', 'اسمح بالموقع حتى يرى العميل مكان الكابتن أثناء التوصيل', 'error');
-            }, { enableHighAccuracy: true, maximumAge: 5000, timeout: 15000 });
-        }
-
         /* ========== تسجيل الخروج ========== */
         window.logout = function() {
             if (confirm('تأكيد تسجيل الخروج؟')) {
@@ -1136,6 +1312,8 @@
                 currentDriverId = null;
                 currentDriverName = '';
                 if (locationWatchId !== null) navigator.geolocation.clearWatch(locationWatchId);
+                const CapGeo = window.Capacitor?.Plugins?.Geolocation;
+                if (CapGeo && capacitorWatchId) CapGeo.clearWatch({ id: capacitorWatchId }).catch(() => {});
                 location.reload();
             }
         };
@@ -1171,11 +1349,17 @@
         function startListeningToOrders() {
             if (!currentDriverId) return;
 
-            const allQ = query(collection(db, "Orders"), where("driverId", "==", currentDriverId), orderBy("timestamp", "desc"));
-            
+            const allQ = query(collection(db, "Orders"), where("driverId", "==", currentDriverId));
+
             onSnapshot(allQ, (snapshot) => {
                 myOrders = [];
-                snapshot.forEach(docSnap => myOrders.push({ id: docSnap.id, ...docSnap.data() }));
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    if (data.driverId === currentDriverId) {
+                        myOrders.push({ id: docSnap.id, ...data });
+                    }
+                });
+                myOrders.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
 
                 if (ordersInitialized) {
                     snapshot.docChanges().filter(change => change.type === 'added').forEach(change => {
@@ -1294,9 +1478,18 @@
                                 <span class="row-value" style="color:var(--info);">${escapeHtml(order.customerPhone || '—')}</span>
                             </div>
                             <div class="customer-row">
+                                <span class="row-label">🏠 العنوان:</span>
+                                <span class="row-value">${escapeHtml(order.customerAddress || 'غير محدد')}</span>
+                            </div>
+                            <div class="customer-row">
                                 <span class="row-label">📍 الموقع:</span>
                                 <span class="row-value">${order.customerLocation?.mapsUrl ? `<a href="${order.customerLocation.mapsUrl}" target="_blank" style="color:var(--info);">فتح الخريطة</a>` : 'غير محدد'}</span>
                             </div>
+                            ${isDelivered && order.feedback ? `
+                            <div class="customer-row">
+                                <span class="row-label">⭐ التقييم:</span>
+                                <span class="row-value">${'★'.repeat(order.feedback.rating || 0)}${'☆'.repeat(5 - (order.feedback.rating || 0))}</span>
+                            </div>` : ''}
                         </div>
 
                         <div class="items-box">
@@ -1324,15 +1517,18 @@
 
                         <div class="btn-group">
                             <a href="tel:${order.customerPhone}" class="call-btn" ${!order.customerPhone ? 'style="opacity:0.5;pointer-events:none;"' : ''}>
-                                📞 اتصل بالعميل
+                                📞 اتصال
+                            </a>
+                            <a href="https://wa.me/2${order.customerPhone}?text=${encodeURIComponent(`مرحباً يا ${order.customerName || 'عميل'}، أنا كابتن الصاروووخ 👋 بطلبك رقم #${order.orderNumber || orderId} 🚀`)}" target="_blank" class="whatsapp-btn" ${!order.customerPhone ? 'style="opacity:0.5;pointer-events:none;"' : ''}>
+                                💬 واتساب
                             </a>
                             ${!isDelivered ? `
                                 <button class="btn-success" onclick="window.markAsDelivered('${orderId}')">
-                                    ✅ تم التسليم
+                                    ✅ تسليم
                                 </button>
                             ` : `
-                                <button class="btn-success" style="background: var(--gradient-blue); box-shadow: 0 4px 16px rgba(59,130,246,0.35);" onclick="showOrderDetails('${orderId}')">
-                                    📋 عرض التفاصيل
+                                <button class="btn-success" style="background: var(--gradient-blue); box-shadow: 0 4px 16px rgba(59,130,246,0.35); flex:1.2;" onclick="showOrderDetails('${orderId}')">
+                                    📋 تفاصيل
                                 </button>
                             `}
                         </div>
@@ -1435,10 +1631,29 @@
                         <span style="color:var(--medium-text); font-weight:700; font-size:13px;">الاسم:</span>
                         <span style="font-weight:700; font-size:14px;">${escapeHtml(order.customerName || '—')}</span>
                     </div>
-                    <div style="display:flex; justify-content:space-between; padding:6px 0;">
+                    <div style="display:flex; justify-content:space-between; padding:6px 0; align-items:center;">
                         <span style="color:var(--medium-text); font-weight:700; font-size:13px;">الهاتف:</span>
-                        <a href="tel:${order.customerPhone}" style="color:var(--info); font-weight:800; text-decoration:none; font-size:14px;">${escapeHtml(order.customerPhone || '—')}</a>
+                        <div style="display:flex;gap:6px;align-items:center;">
+                            <a href="tel:${order.customerPhone}" style="color:var(--info); font-weight:800; text-decoration:none; font-size:14px;">📞 ${escapeHtml(order.customerPhone || '—')}</a>
+                            ${order.customerPhone ? `<a href="https://wa.me/2${order.customerPhone}?text=${encodeURIComponent(`مرحباً يا ${order.customerName || 'عميل'}، أنا كابتن الصاروووخ 👋 بطلبك رقم #${order.orderNumber || ''} 🚀`)}" target="_blank" title="واتساب" style="display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:9px;background:var(--gradient-whatsapp);color:#fff;text-decoration:none;font-size:13px;box-shadow:0 2px 6px rgba(37,211,102,0.3);">💬</a>` : ''}
+                        </div>
                     </div>
+                    <div style="display:flex; justify-content:space-between; padding:6px 0;">
+                        <span style="color:var(--medium-text); font-weight:700; font-size:13px;">العنوان:</span>
+                        <span style="font-weight:700; font-size:13px; max-width:60%; text-align:left;">${escapeHtml(order.customerAddress || '—')}</span>
+                    </div>
+                    ${order.customerLocation?.mapsUrl ? `
+                    <div style="display:flex; justify-content:space-between; padding:6px 0;">
+                        <span style="color:var(--medium-text); font-weight:700; font-size:13px;">الموقع:</span>
+                        <a href="${order.customerLocation.mapsUrl}" target="_blank" style="color:var(--info);font-weight:800;font-size:13px;text-decoration:none;">📍 افتح الخريطة</a>
+                    </div>` : ''}
+                    ${order.feedback ? `
+                    <div style="margin-top:10px;padding:12px;background:linear-gradient(135deg,#fff7ed,#ffedd5);border-radius:12px;border:1px solid rgba(255,107,53,0.15);">
+                        <div style="font-weight:900;color:var(--primary-dark);margin-bottom:6px;font-size:13px;">⭐ تقييم العميل</div>
+                        <div style="color:#f59e0b;font-weight:900;font-size:20px;letter-spacing:2px;">${'★'.repeat(order.feedback.rating || 0)}${'☆'.repeat(5 - (order.feedback.rating || 0))}</div>
+                        ${order.feedback.comment ? `<div style="margin-top:6px;font-size:13px;color:var(--dark-text);font-weight:700;">"${escapeHtml(order.feedback.comment)}"</div>` : ''}
+                        <div style="margin-top:4px;font-size:11px;color:var(--medium-text);font-weight:600;">— ${escapeHtml(order.feedback.customerName || 'العميل')}</div>
+                    </div>` : ''}
                 </div>
 
                 <h4 style="margin:0 0 10px 0; font-size:15px; font-weight:800;">🍽️ الأصناف (${items.length})</h4>

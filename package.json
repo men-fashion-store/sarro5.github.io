@@ -1,0 +1,29 @@
+{
+  "name": "elsarokh-market",
+  "version": "1.0.0",
+  "private": true,
+  "description": "الصاروووخ - تطبيق طلبات السوق والسوبرماركت",
+  "scripts": {
+    "web:sync": "powershell -ExecutionPolicy Bypass -File ./sync-web.ps1",
+    "android:add": "cap add android",
+    "android:sync": "npm run web:sync && cap sync android",
+    "android:open": "cap open android",
+    "android:build": "cap build android",
+    "web:serve": "npx serve .",
+    "android:client": "cd android && gradlew assembleClientDebug",
+    "android:admin": "cd android && gradlew assembleAdminDebug",
+    "android:driver": "cd android && gradlew assembleDriverDebug",
+    "android:all": "cd android && gradlew assembleClientDebug assembleAdminDebug assembleDriverDebug",
+    "android:pack": "powershell -ExecutionPolicy Bypass -File ./pack-apks.ps1"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.4.3",
+    "@capacitor/core": "^7.4.3",
+    "@capacitor/geolocation": "^7.1.8",
+    "@capacitor/local-notifications": "^7.0.7"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.4.3",
+    "typescript": "^5.8.3"
+  }
+}

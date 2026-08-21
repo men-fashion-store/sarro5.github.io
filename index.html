@@ -9,12 +9,12 @@
     <meta name="apple-mobile-web-app-title" content="الصاروووخ">
     <meta name="application-name" content="الصاروووخ">
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
-    <title>الصاروووخ | طلبات السوق والسوبرماركت</title>
+    <link rel="icon" type="image/png" sizes="512x512" href="Orange Modern Food Delivery Service Instagram Post.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="Orange Modern Food Delivery Service Instagram Post.png">
+    <title>الصاروووخ | طلبات السوق والسوبر ماركت</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&family=Almarai:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-orange: #ff6b35;
@@ -28,18 +28,31 @@
             --success-light: #d1fae5;
             --danger: #ef4444;
             --danger-light: #fee2e2;
+            --info: #3b82f6;
+            --info-light: #dbeafe;
+            --whatsapp: #25d366;
+            --pink: #ec4899;
+            --pink-light: #fce7f3;
+            --gold: #f59e0b;
+            --gold-light: #fef3c7;
+            --gray-100: #f3f4f6;
             --shadow-sm: 0 2px 8px rgba(0,0,0,0.06);
             --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
             --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
             --shadow-orange: 0 4px 20px rgba(255, 107, 53, 0.3);
+            --shadow-pink: 0 4px 16px rgba(236, 72, 153, 0.25);
+            --shadow-gold: 0 4px 16px rgba(245, 158, 11, 0.25);
             --gradient-orange: linear-gradient(135deg, #ff6b35 0%, #ff8c42 50%, #ffb347 100%);
+            --gradient-whatsapp: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+            --gradient-pink: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
+            --gradient-header: linear-gradient(135deg, #ff6b35 0%, #ff5a1f 40%, #ff8c42 100%);
         }
 
         * { -webkit-tap-highlight-color: transparent; }
 
         body {
             margin: 0;
-            font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Tajawal', 'Almarai', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: var(--light-bg);
             min-height: 100vh;
             color: var(--dark-text);
@@ -285,7 +298,153 @@
             animation: pulse 0.4s ease;
         }
 
-        /* ========== شريط البحث الاحترافي ========== */
+        .fav-badge {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            background: var(--gradient-pink);
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 11px;
+            font-weight: 800;
+            min-width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-pink);
+            animation: pulse 0.4s ease;
+        }
+
+        /* ========== تبويبات التنقل ========== */
+        .view-tabs {
+            display: flex;
+            gap: 8px;
+            padding: 18px 20px 0;
+            margin-top: 20px;
+        }
+
+        .view-tab {
+            flex: 1;
+            background: rgba(255,255,255,0.18);
+            backdrop-filter: blur(10px);
+            color: white;
+            border: none;
+            padding: 10px 12px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 13px;
+            font-family: inherit;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.25s ease;
+            opacity: 0.9;
+        }
+
+        .view-tab.active {
+            background: white;
+            color: var(--primary-orange);
+            opacity: 1;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+            transform: translateY(-1px);
+        }
+
+        .view-tab:active { transform: scale(0.97); }
+
+        /* ========== زر المفضلة في الكروت ========== */
+        .fav-btn {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 5;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid rgba(255,255,255,0.5);
+            color: var(--pink);
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            transition: all 0.2s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .fav-btn.filled {
+            background: var(--gradient-pink);
+            color: white;
+            border-color: transparent;
+            box-shadow: var(--shadow-pink);
+            animation: popHeart 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .fav-btn:active { transform: scale(0.88); }
+
+        @keyframes popHeart {
+            0% { transform: scale(0.6); }
+            50% { transform: scale(1.15); }
+            100% { transform: scale(1); }
+        }
+
+        /* ========== skeleton loader (تحميل احترافي) ========== */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f1f5 25%, #e5e7eb 37%, #f0f1f5 63%);
+            background-size: 400% 100%;
+            animation: shimmer 1.4s ease infinite;
+            border-radius: 12px;
+        }
+
+        .skeleton-card {
+            background: white;
+            border-radius: 20px;
+            padding: 0;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .skeleton-img {
+            width: 100%;
+            aspect-ratio: 16 / 10;
+            border-radius: 0;
+        }
+
+        .skeleton-line { height: 14px; border-radius: 6px; margin: 10px 14px; }
+        .skeleton-line-sm { height: 12px; border-radius: 6px; margin: 6px 14px; }
+        .skeleton-btn { height: 38px; border-radius: 10px; margin: 10px 14px 14px; }
+
+        /* ========== نجوم التقييم ========== */
+        .rating-mini {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            color: var(--gold);
+            font-weight: 800;
+            font-size: 12px;
+            background: var(--gold-light);
+            padding: 3px 8px;
+            border-radius: 8px;
+        }
+
+        .rating-mini.gold-bg {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            box-shadow: var(--shadow-gold);
+        }
+
+        .stars {
+            color: #d1d5db;
+            font-size: 22px;
+            letter-spacing: 2px;
+        }
+        .stars .on { color: var(--gold); }
+
+        /* ========== بطاقة بيانات الدليفري ========== */
         .search-container {
             position: relative;
         }
@@ -393,28 +552,199 @@
         #driver-info-card {
             background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
             border-right: 5px solid var(--success);
-            padding: 18px;
-            border-radius: 16px;
+            padding: 20px;
+            border-radius: 20px;
             margin: 20px;
-            box-shadow: var(--shadow-md);
+            box-shadow: var(--shadow-lg);
             animation: slideUp 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #driver-info-card::before {
+            content: '🛵';
+            position: absolute;
+            left: -10px;
+            bottom: -15px;
+            font-size: 90px;
+            opacity: 0.08;
         }
 
         #driver-info-card h3 {
-            margin: 0 0 12px 0;
+            margin: 0 0 16px 0;
             color: var(--success);
-            font-size: 18px;
+            font-size: 20px;
+            font-weight: 900;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            position: relative;
+            z-index: 2;
         }
 
         #driver-info-card p {
-            margin: 6px 0;
+            margin: 8px 0;
             font-size: 15px;
+            position: relative;
+            z-index: 2;
         }
 
-        #driver-info-card strong { color: var(--dark-text); }
+        #driver-info-card strong { color: var(--dark-text); font-weight: 800; }
+
+        #driver-info-card.pending-card {
+            background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+            border-right-color: var(--primary-orange);
+        }
+
+        #driver-info-card.pending-card::before { content: '⏳'; }
+
+        #driver-info-card.pending-card h3 { color: var(--primary-orange); }
+
+        .driver-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 16px;
+            position: relative;
+            z-index: 2;
+            flex-wrap: wrap;
+        }
+
+        .driver-action-btn {
+            flex: 1;
+            min-width: 130px;
+            padding: 13px 16px;
+            border: none;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .driver-action-btn:active { transform: scale(0.96); }
+
+        .driver-action-btn.call {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+        }
+
+        .driver-action-btn.whatsapp {
+            background: var(--gradient-whatsapp);
+            color: white;
+        }
+
+        .driver-action-btn.location {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            color: white;
+        }
+
+        .driver-profile-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin: 14px 0;
+            padding: 14px;
+            background: rgba(255,255,255,0.6);
+            border-radius: 16px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .driver-avatar-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: var(--gradient-orange);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 26px;
+            font-weight: 900;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(255,107,53,0.3);
+            border: 3px solid white;
+        }
+
+        .driver-profile-info h4 {
+            margin: 0 0 4px 0;
+            font-size: 17px;
+            font-weight: 900;
+            color: var(--dark-text);
+        }
+
+        .driver-profile-info p {
+            margin: 0 !important;
+            font-size: 12px !important;
+            color: var(--medium-text);
+            font-weight: 700;
+        }
+
+        .driver-rating-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            background: #fef3c7;
+            color: #d97706;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 800;
+            margin-top: 4px;
+        }
+
+        .rating-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .rating-card {
+            background: #fff;
+            border-radius: 22px;
+            padding: 26px 22px;
+            width: 100%;
+            max-width: 380px;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .star-btn {
+            background: none;
+            border: none;
+            font-size: 34px;
+            cursor: pointer;
+            color: #d1d5db;
+            padding: 0 4px;
+            line-height: 1;
+        }
+
+        .star-btn.active { color: #f59e0b; }
+
+        .rating-card textarea {
+            width: 100%;
+            min-height: 90px;
+            border: 2px solid #eee;
+            border-radius: 12px;
+            padding: 12px;
+            font-family: inherit;
+            font-size: 14px;
+            box-sizing: border-box;
+            resize: vertical;
+            margin: 12px 0 16px;
+        }
 
         /* ========== القوائم ========== */
         .view-wrapper { padding: 20px; }
@@ -1010,25 +1340,29 @@
                     <input type="text" id="userName" placeholder="الاسم ثلاثي" required>
                 </div>
                 <div class="input-field">
-                    <input type="tel" id="userPhone" placeholder="رقم الهاتف" required>
+                    <input type="tel" id="userPhone" placeholder="01xxxxxxxxx" inputmode="numeric" maxlength="11" pattern="[0-9]{11}" required oninput="window.restrictPhoneInput(this)">
+                    <small id="phone-hint" style="display:block;color:var(--medium-text);margin-top:6px;font-size:12px;">11 رقم فقط (مثال: 01012345678)</small>
                 </div>
                 <div class="input-field">
                     <input type="text" id="userAddress" placeholder="العنوان (منطقة/عمارة)" required>
                 </div>
                 <div class="input-field" style="text-align:right;">
-                    <input type="file" id="customerPhoto" accept="image/*" capture="environment">
-                    <small style="display:block;color:var(--medium-text);margin-top:6px;">📷 صورة اختيارية للطلب</small>
+                    <input type="file" id="customerPhoto" accept="image/*">
+                    <small style="display:block;color:var(--medium-text);margin-top:6px;">📷 اختار صورة من الملفات — مش إجبارية</small>
+                    <img id="customerPhotoPreview" class="hidden" alt="معاينة الصورة" style="max-width:120px;border-radius:12px;margin-top:8px;border:2px solid #eee;">
                 </div>
                 <button type="button" class="btn-secondary" onclick="window.captureLocation()">📍 تحديد عنواني من الخريطة</button>
-                <p id="location-status" style="margin:10px 0 0;color:var(--medium-text);font-size:13px;">يجب السماح بالموقع لتأكيد العنوان</p>
-                <button class="btn-primary" onclick="window.saveAndEnter()">🚀 تسجيل ودخول</button>
+                <p id="location-status" style="margin:10px 0 0;color:var(--medium-text);font-size:13px;">اضغط تحديد العنوان عشان الخريطة تملا خانة العنوان تلقائي</p>
+                <button type="button" id="register-save-btn" class="btn-primary" onclick="window.saveAndEnter()">🚀 تسجيل ودخول</button>
+                <button type="button" id="cancel-edit-btn" class="btn-secondary hidden" onclick="window.cancelEditProfile()" style="margin-top:10px;">إلغاء</button>
             </div>
 
             <div id="welcome-section" class="hidden">
                 <h2>مرحباً يا <span class="welcome-name" id="displayName"></span> 👋</h2>
                 <p class="tagline" style="margin-bottom: 24px;">جاهز تطلب محتاجك؟</p>
                 <button class="btn-primary" onclick="window.enterApp()">هيا نبدأ 🚀</button>
-                <button class="btn-secondary" onclick="window.switchUser()">تغيير الحساب</button>
+                <button class="btn-secondary" onclick="window.showEditProfile(false)">✏️ تعديل بياناتي</button>
+                <button class="btn-secondary" onclick="window.switchUser()" style="margin-top:8px;">تغيير الحساب</button>
             </div>
         </div>
     </div>
@@ -1036,14 +1370,18 @@
     <!-- ================= 2. التطبيق الرئيسي ================= -->
     <div id="main-app" class="hidden">
         
-        <div class="app-header">
+        <div class="app-header" style="background: var(--gradient-header);">
             <div class="header-top">
                 <div class="header-user">
                     <span class="hi-text">أهلاً بك 👋</span>
                     <span class="user-name" id="header-name">العميل</span>
                 </div>
                 <div class="header-icons">
-                    <button class="icon-btn" title="المفضلة" onclick="showToast('قريباً! 🤩', 'المفضلة هتكون متاحة قريباً', 'info')">❤️</button>
+                    <button class="icon-btn" title="تعديل بياناتي" onclick="window.showEditProfile(true)">👤</button>
+                    <button class="icon-btn" title="المفضلة" onclick="window.switchView('favorites')">
+                        💖
+                        <span id="fav-count" class="fav-badge hidden">0</span>
+                    </button>
                     <button class="icon-btn" title="السلة" onclick="window.openCart()">
                         🛒
                         <span id="cart-count" class="cart-badge hidden">0</span>
@@ -1058,22 +1396,48 @@
                     <button class="clear-search" id="clear-search-btn" onclick="clearSearch()">✕</button>
                 </div>
             </div>
+
+            <div class="view-tabs" id="view-tabs">
+                <button class="view-tab active" data-view="home" onclick="window.switchView('home', this)">🏠 الرئيسية</button>
+                <button class="view-tab" data-view="favorites" onclick="window.switchView('favorites', this)">💖 المفضلة <span id="tab-fav-count" style="display:none;"></span></button>
+                <button class="view-tab" data-view="orders" onclick="window.switchView('orders', this)">📦 طلباتي</button>
+            </div>
         </div>
 
         <div id="driver-info-card" class="hidden">
-            <h3>🚀 طلبك في الطريق!</h3>
-            <p>👤 <strong>الطيار:</strong> <span id="driverName">--</span></p>
-            <p>📞 الهاتف: <a id="driverPhone" href="#" style="color:var(--info);font-weight:800;text-decoration:none;">--</a></p>
-            <p>🛵 المركبة: <strong id="driverVehicle">--</strong></p>
-            <p>🔖 رقم طلبك: <strong id="trackingOrderNumber">--</strong></p>
-            <p>📍 موقع الكابتن: <a id="driverLocationLink" href="#" target="_blank" style="color:var(--info);font-weight:800;text-decoration:none;">جاري التحديث</a></p>
+            <h3 id="order-track-title">🚀 طلبك في الطريق!</h3>
+            <p style="font-size:13px;background:rgba(255,255,255,0.6);padding:8px 14px;border-radius:12px;display:inline-block;">🔖 رقم طلبك: <strong id="trackingOrderNumber" style="font-size:16px;">--</strong></p>
+            <div id="assigned-driver-block" class="hidden">
+                <div class="driver-profile-row">
+                    <div class="driver-avatar-circle" id="driverAvatar">ط</div>
+                    <div class="driver-profile-info">
+                        <h4 id="driverName">--</h4>
+                        <p id="driverVehicle">--</p>
+                        <span class="driver-rating-badge" id="driverRatingBadge" style="display:none;">⭐ <span id="driverRatingText">--</span></span>
+                    </div>
+                </div>
+                <div class="driver-actions">
+                    <a id="driverPhone" href="#" class="driver-action-btn call">📞 اتصال</a>
+                    <a id="driverWhatsApp" href="#" class="driver-action-btn whatsapp" target="_blank">� واتساب</a>
+                    <a id="driverLocationLink" href="#" target="_blank" class="driver-action-btn location">📍 الموقع</a>
+                </div>
+            </div>
+            <div id="pending-driver-block" class="hidden">
+                <div style="display:flex;align-items:center;gap:12px;padding:14px;background:rgba(255,255,255,0.5);border-radius:14px;margin-top:10px;">
+                    <div style="font-size:34px;animation:pulse 1.5s infinite;">⏳</div>
+                    <div>
+                        <p style="margin:0;font-weight:800;color:var(--dark-text);font-size:15px;">جاري تعيين طيار لطلبك</p>
+                        <p style="margin:2px 0 0 0;font-size:12px;color:var(--medium-text);">سيتم إخطارك فور تعيين أحد طيارينا لطلبك</p>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- التصنيفات السوبر ماركت -->
         <div class="categories-scroll" id="categories-section">
             <div class="categories-wrapper" id="categories-wrapper">
                 <button class="category-chip active" data-category="all" onclick="filterByCategory('all', this)">🛒 الكل</button>
-                <button class="category-chip" data-category="supermarket" onclick="filterByCategory('supermarket', this)">� سوبر ماركت</button>
+                <button class="category-chip" data-category="supermarket" onclick="filterByCategory('supermarket', this)">🏪 سوبر ماركت</button>
                 <button class="category-chip" data-category="bakery" onclick="filterByCategory('bakery', this)">🥖 مخبوزات</button>
                 <button class="category-chip" data-category="dairy" onclick="filterByCategory('dairy', this)">🧀 ألبان وبيض</button>
                 <button class="category-chip" data-category="meat" onclick="filterByCategory('meat', this)">🥩 لحوم وفراخ</button>
@@ -1111,6 +1475,41 @@
             <div class="product-grid" id="products-container"></div>
         </div>
 
+        <!-- قائمة المفضلة -->
+        <div class="view-wrapper hidden" id="favorites-view">
+            <div class="view-header">
+                <div>
+                    <h2 class="view-title">💖 المفضلة بتاعتي</h2>
+                    <p class="view-subtitle" id="favorites-count">جاري التحميل...</p>
+                </div>
+            </div>
+
+            <div id="fav-restaurants-block">
+                <div class="view-header" style="margin-top:16px;">
+                    <h3 style="font-size:16px;color:var(--dark-text);margin:0;">🏪 المحلات المفضلة</h3>
+                </div>
+                <div class="items-grid" id="fav-restaurants-list"></div>
+            </div>
+
+            <div id="fav-products-block" style="margin-top:10px;">
+                <div class="view-header" style="margin-top:16px;">
+                    <h3 style="font-size:16px;color:var(--dark-text);margin:0;">📦 المنتجات المفضلة</h3>
+                </div>
+                <div class="product-grid" id="fav-products-list"></div>
+            </div>
+        </div>
+
+        <!-- قائمة طلباتي -->
+        <div class="view-wrapper hidden" id="my-orders-view">
+            <div class="view-header">
+                <div>
+                    <h2 class="view-title">📦 طلباتي السابقة</h2>
+                    <p class="view-subtitle" id="my-orders-count">جاري التحميل...</p>
+                </div>
+            </div>
+            <div class="items-grid" id="my-orders-list" style="grid-template-columns:1fr;"></div>
+        </div>
+
     </div>
 
     <!-- ================= 3. السلة (Bottom Sheet) ================= -->
@@ -1127,31 +1526,58 @@
                 <div class="summary-row" style="color: var(--primary-orange);"><span>رسوم التوصيل:</span><strong id="cart-delivery">0 ج.م</strong></div>
                 <div class="summary-row total"><span>الإجمالي:</span><strong class="total-val" id="cart-total">0 ج.م</strong></div>
                 <div style="margin-top:12px;text-align:right;">
-                    <label for="orderPhoto" style="display:block;font-weight:700;font-size:13px;margin-bottom:6px;">📷 صورة اختيارية للطلب</label>
-                    <input type="file" id="orderPhoto" accept="image/*" capture="environment" style="width:100%;font-family:inherit;">
+                    <label for="orderPhoto" style="display:block;font-weight:700;font-size:13px;margin-bottom:6px;">📷 صورة للطلب (اختياري — مش إجبارية)</label>
+                    <input type="file" id="orderPhoto" accept="image/*" style="width:100%;font-family:inherit;" onchange="window.previewOrderPhoto(this)">
+                    <img id="orderPhotoPreview" class="hidden" alt="معاينة صورة الطلب" style="max-width:100px;border-radius:10px;margin-top:8px;border:2px solid #eee;">
                 </div>
                 <button class="btn-success" onclick="window.submitOrder()" style="margin-top: 16px;">✅ تأكيد الطلب وإرساله</button>
             </div>
         </div>
     </div>
 
+    <div id="rating-overlay" class="rating-overlay hidden">
+        <div class="rating-card">
+            <h3 style="margin:0 0 8px;">قيّم الطيار ⭐</h3>
+            <p id="rating-driver-name" style="color:var(--medium-text);margin:0 0 14px;">كيف كانت تجربة التوصيل؟</p>
+            <div id="star-row">
+                <button type="button" class="star-btn" data-star="1" onclick="window.setRatingStars(1)">★</button>
+                <button type="button" class="star-btn" data-star="2" onclick="window.setRatingStars(2)">★</button>
+                <button type="button" class="star-btn" data-star="3" onclick="window.setRatingStars(3)">★</button>
+                <button type="button" class="star-btn" data-star="4" onclick="window.setRatingStars(4)">★</button>
+                <button type="button" class="star-btn" data-star="5" onclick="window.setRatingStars(5)">★</button>
+            </div>
+            <textarea id="rating-comment" placeholder="اكتب تعليقك على الطيار (اختياري)"></textarea>
+            <button type="button" class="btn-primary" onclick="window.submitDriverFeedback()">إرسال التقييم</button>
+            <button type="button" class="btn-secondary" style="margin-top:8px;" onclick="window.skipDriverFeedback()">لاحقاً</button>
+        </div>
+    </div>
+
     <!-- ================= 4. الجافاسكربت وربط Firebase ================= -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, getDocs, onSnapshot, query, where, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, onSnapshot, query, where, doc, updateDoc, increment, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
-            apiKey: "AIzaSyDHRBlNeJ_TWe_ypUaEkgruhnbt0fjuH8M",
-            authDomain: "delivery-c2b83.firebaseapp.com",
-            databaseURL: "https://delivery-c2b83-default-rtdb.firebaseio.com",
-            projectId: "delivery-c2b83",
-            storageBucket: "delivery-c2b83.firebasestorage.app",
-            messagingSenderId: "202115203824",
-            appId: "1:202115203824:web:8717748c8bd7bff3aff835"
+            apiKey: "AIzaSyAis4G-tc2NkT9nrn4VpB39mDVqPILqTpA",
+            authDomain: "saroo5-ab72a.firebaseapp.com",
+            projectId: "saroo5-ab72a",
+            storageBucket: "saroo5-ab72a.firebasestorage.app",
+            messagingSenderId: "265152576253",
+            appId: "1:265152576253:web:38d3104acc701b3fd19c94",
+            measurementId: "G-HC4G1LQSEY"
         };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+        let app, db;
+        try {
+            app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            console.log('Firebase initialized successfully');
+        } catch (error) {
+            console.error('Firebase initialization error:', error);
+            showToast('خطأ في الاتصال', 'تعذر الاتصال بقاعدة البيانات. التطبيق سيعمل في وضع عدم الاتصال.', 'error');
+            // نستمر حتى لو فشل Firebase - التطبيق سيعمل مع localStorage
+            db = null;
+        }
 
         let cart = [];
         let customerData = {};
@@ -1164,22 +1590,79 @@
         let showAllProductsMode = false;
         let lastTrackedOrderStatus = null;
         let driverLocationUnsubscribe = null;
+        let activeOrderId = null;
+        let selectedRating = 0;
+        let pendingFeedbackOrder = null;
+        let favorites = { restaurants: [], products: [] };
+        let currentView = 'home';
+        let myOrders = [];
 
-        function notifyCustomer(title, message) {
-            showToast(title, message, 'info');
-            if ('Notification' in window && Notification.permission === 'granted') {
-                new Notification(title, { body: message, icon: 'Orange Modern Food Delivery Service Instagram Post.png', tag: 'elsarokh-order' });
-            } else if ('Notification' in window && Notification.permission === 'default') {
-                Notification.requestPermission().catch(() => {});
+        function validatePhone(phone) {
+            const digits = String(phone || '').replace(/\D/g, '');
+            return digits.length === 11 && /^01[0125]\d{8}$/.test(digits);
+        }
+
+        window.restrictPhoneInput = function(input) {
+            input.value = input.value.replace(/\D/g, '').slice(0, 11);
+        };
+
+        async function requestAppPermissions() {
+            try {
+                const LocalNotifications = window.Capacitor?.Plugins?.LocalNotifications;
+                if (LocalNotifications) {
+                    try {
+                        await LocalNotifications.requestPermissions();
+                    } catch (e) {
+                        console.error('Error requesting notification permissions:', e);
+                    }
+                } else if ('Notification' in window && Notification.permission === 'default') {
+                    try {
+                        await Notification.requestPermission();
+                    } catch (e) {
+                        console.error('Error requesting browser notification permissions:', e);
+                    }
+                }
+            } catch (error) {
+                console.error('Error in requestAppPermissions:', error);
             }
         }
 
-        function notifyCustomer(title, message) {
+        async function notifyCustomer(title, message) {
             showToast(title, message, 'info');
-            if ('Notification' in window && Notification.permission === 'granted') {
-                new Notification(title, { body: message, icon: 'Orange Modern Food Delivery Service Instagram Post.png', tag: 'elsarokh-order' });
-            } else if ('Notification' in window && Notification.permission === 'default') {
-                Notification.requestPermission().catch(() => {});
+            try {
+                const LocalNotifications = window.Capacitor?.Plugins?.LocalNotifications;
+                if (LocalNotifications) {
+                    try {
+                        await LocalNotifications.schedule({
+                            notifications: [{
+                                id: Math.floor(Math.random() * 2147483647),
+                                title,
+                                body: message,
+                                sound: 'default'
+                            }]
+                        });
+                        return;
+                    } catch (e) {
+                        console.error('Error scheduling local notification:', e);
+                    }
+                }
+            } catch (e) {
+                console.error('Error in notifyCustomer (Capacitor):', e);
+            }
+            
+            try {
+                if ('Notification' in window) {
+                    if (Notification.permission === 'granted') {
+                        new Notification(title, { body: message, icon: 'Orange Modern Food Delivery Service Instagram Post.png', tag: 'elsarokh-order' });
+                    } else if (Notification.permission === 'default') {
+                        const permission = await Notification.requestPermission();
+                        if (permission === 'granted') {
+                            new Notification(title, { body: message, icon: 'Orange Modern Food Delivery Service Instagram Post.png', tag: 'elsarokh-order' });
+                        }
+                    }
+                }
+            } catch (e) {
+                console.error('Error in notifyCustomer (browser):', e);
             }
         }
 
@@ -1203,6 +1686,76 @@
             }, 3000);
         };
 
+        function resetRegisterFormMode() {
+            const registerSection = document.getElementById('register-section');
+            registerSection.dataset.mode = '';
+            document.getElementById('register-save-btn').innerText = '🚀 تسجيل ودخول';
+            document.getElementById('cancel-edit-btn').classList.add('hidden');
+        }
+
+        window.previewOrderPhoto = function(input) {
+            const preview = document.getElementById('orderPhotoPreview');
+            const file = input.files?.[0];
+            if (!file || !preview) return;
+            preview.src = URL.createObjectURL(file);
+            preview.classList.remove('hidden');
+        };
+
+        function setupPhotoPreview() {
+            const customerPhoto = document.getElementById('customerPhoto');
+            const preview = document.getElementById('customerPhotoPreview');
+            if (!customerPhoto || !preview) return;
+            customerPhoto.addEventListener('change', () => {
+                const file = customerPhoto.files?.[0];
+                if (!file) {
+                    preview.classList.add('hidden');
+                    preview.removeAttribute('src');
+                    return;
+                }
+                preview.src = URL.createObjectURL(file);
+                preview.classList.remove('hidden');
+            });
+            if (customerData.photo) {
+                preview.src = customerData.photo;
+                preview.classList.remove('hidden');
+            }
+        }
+
+        window.showEditProfile = function(fromApp) {
+            document.getElementById('userName').value = customerData.name || '';
+            document.getElementById('userPhone').value = (customerData.phone || '').replace(/\D/g, '');
+            document.getElementById('userAddress').value = customerData.address || '';
+            document.getElementById('register-section').dataset.mode = fromApp ? 'edit-app' : 'edit-welcome';
+            document.getElementById('register-save-btn').innerText = '💾 حفظ التعديلات';
+            document.getElementById('cancel-edit-btn').classList.remove('hidden');
+            const status = document.getElementById('location-status');
+            if (customerData.location && status) {
+                status.innerText = `موقع محفوظ ✅ (دقة ~${customerData.location.accuracy || '?'} متر)`;
+                status.style.color = 'var(--success)';
+            }
+            if (fromApp) {
+                document.getElementById('main-app').classList.add('hidden');
+                document.getElementById('splash-screen').classList.remove('hidden');
+            }
+            document.getElementById('register-section').classList.remove('hidden');
+            document.getElementById('welcome-section').classList.add('hidden');
+            setupPhotoPreview();
+        };
+
+        window.cancelEditProfile = function() {
+            const mode = document.getElementById('register-section').dataset.mode;
+            resetRegisterFormMode();
+            if (mode === 'edit-app') {
+                window.enterApp();
+                return;
+            }
+            if (customerData.name && customerData.phone) {
+                showCustomerEntry(customerData);
+            } else {
+                showCustomerEntry(null);
+            }
+        };
+
         /* ========== نظام التسجيل المحلي ========== */
         function showCustomerEntry(savedCustomer) {
             const registerSection = document.getElementById('register-section');
@@ -1216,60 +1769,116 @@
         }
 
         document.addEventListener("DOMContentLoaded", () => {
-            const savedName = localStorage.getItem("elsarokh_userName");
-            const savedPhone = localStorage.getItem("elsarokh_userPhone");
-            const savedAddress = localStorage.getItem("elsarokh_userAddress");
-            const savedLocation = JSON.parse(localStorage.getItem("elsarokh_userLocation") || 'null');
-            const savedPhoto = localStorage.getItem("elsarokh_userPhoto") || '';
+            try {
+                const savedName = localStorage.getItem("elsarokh_userName");
+                const savedPhone = localStorage.getItem("elsarokh_userPhone");
+                const savedAddress = localStorage.getItem("elsarokh_userAddress");
+                const savedLocation = JSON.parse(localStorage.getItem("elsarokh_userLocation") || 'null');
+                const savedPhoto = localStorage.getItem("elsarokh_userPhoto") || '';
 
-            if (savedName && savedPhone) {
-                customerData = { name: savedName, phone: savedPhone, address: savedAddress || '', location: savedLocation, photo: savedPhoto };
-                showCustomerEntry(customerData);
-            } else {
-                showCustomerEntry(null);
-            }
+                if (savedName && savedPhone) {
+                    customerData = { name: savedName, phone: savedPhone, address: savedAddress || '', location: savedLocation, photo: savedPhoto };
+                    showCustomerEntry(customerData);
+                } else {
+                    showCustomerEntry(null);
+                }
 
-            if (!savedLocation) {
-                setTimeout(() => window.captureLocation().catch(() => {}), 500);
-            }
+                if (!savedLocation) {
+                    setTimeout(() => window.captureLocation().catch(() => {}), 500);
+                }
 
-            if ('serviceWorker' in navigator) {
-                navigator.serviceWorker.register('sw.js').catch(() => {});
+                requestAppPermissions();
+                setupPhotoPreview();
+
+                if ('serviceWorker' in navigator) {
+                    navigator.serviceWorker.register('sw.js').catch(() => {});
+                }
+            } catch (error) {
+                console.error('Error in DOMContentLoaded:', error);
             }
         });
 
-        window.captureLocation = function() {
-            return new Promise((resolve, reject) => {
-                if (!navigator.geolocation) {
+        async function reverseGeocode(lat, lng) {
+            try {
+                const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&zoom=18&accept-language=ar`;
+                const res = await fetch(url, { headers: { Accept: 'application/json' } });
+                if (!res.ok) throw new Error('geocode failed');
+                const data = await res.json();
+                return data.display_name || '';
+            } catch (_) {
+                return '';
+            }
+        }
+
+        window.captureLocation = async function() {
+            const status = document.getElementById('location-status');
+            if (status) {
+                status.innerText = 'جاري تحديد موقعك من الخريطة...';
+                status.style.color = 'var(--medium-text)';
+            }
+
+            try {
+                let latitude, longitude, accuracy;
+                const CapGeo = window.Capacitor?.Plugins?.Geolocation;
+
+                if (CapGeo) {
+                    const perm = await CapGeo.requestPermissions();
+                    if (perm.location === 'denied') throw new Error('location permission denied');
+                    const position = await CapGeo.getCurrentPosition({
+                        enableHighAccuracy: true,
+                        timeout: 15000
+                    });
+                    latitude = position.coords.latitude;
+                    longitude = position.coords.longitude;
+                    accuracy = position.coords.accuracy;
+                } else if (navigator.geolocation) {
+                    const position = await new Promise((resolve, reject) => {
+                        navigator.geolocation.getCurrentPosition(resolve, reject, {
+                            enableHighAccuracy: true,
+                            timeout: 15000,
+                            maximumAge: 0
+                        });
+                    });
+                    latitude = position.coords.latitude;
+                    longitude = position.coords.longitude;
+                    accuracy = position.coords.accuracy;
+                } else {
                     showToast('الموقع غير متاح', 'افتح التطبيق من هاتف يدعم خدمة الموقع', 'error');
-                    reject(new Error('geolocation unavailable'));
-                    return;
+                    throw new Error('geolocation unavailable');
                 }
-                const status = document.getElementById('location-status');
-                if (status) status.innerText = 'جاري تحديد موقعك من الخريطة...';
-                navigator.geolocation.getCurrentPosition(position => {
-                    const location = {
-                        lat: Number(position.coords.latitude.toFixed(6)),
-                        lng: Number(position.coords.longitude.toFixed(6)),
-                        accuracy: Math.round(position.coords.accuracy),
-                        mapsUrl: `https://www.google.com/maps?q=${position.coords.latitude},${position.coords.longitude}`
-                    };
-                    customerData.location = location;
-                    localStorage.setItem('elsarokh_userLocation', JSON.stringify(location));
-                    if (status) {
-                        status.innerText = `تم تحديد موقعك بدقة تقريبية ${location.accuracy} متر ✅`;
-                        status.style.color = 'var(--success)';
-                    }
-                    resolve(location);
-                }, () => {
-                    if (status) {
-                        status.innerText = 'لم نقدر نحدد موقعك. اسمح بالموقع وحاول تاني.';
-                        status.style.color = 'var(--danger)';
-                    }
-                    showToast('إذن الموقع مطلوب', 'اسمح للتطبيق باستخدام موقعك لتأكيد العنوان', 'error');
-                    reject(new Error('location permission denied'));
-                }, { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 });
-            });
+
+                const location = {
+                    lat: Number(latitude.toFixed(6)),
+                    lng: Number(longitude.toFixed(6)),
+                    accuracy: Math.round(accuracy),
+                    mapsUrl: `https://www.google.com/maps?q=${latitude},${longitude}`
+                };
+                customerData.location = location;
+                localStorage.setItem('elsarokh_userLocation', JSON.stringify(location));
+
+                const addressField = document.getElementById('userAddress');
+                const geoAddress = await reverseGeocode(latitude, longitude);
+                const filledAddress = geoAddress || `${location.lat}, ${location.lng}`;
+                if (addressField) {
+                    addressField.value = filledAddress;
+                }
+                customerData.address = filledAddress;
+                localStorage.setItem('elsarokh_userAddress', filledAddress);
+
+                if (status) {
+                    status.innerText = `تم تحديد الموقع وملء العنوان تلقائي ✅ (دقة ~${location.accuracy} متر)`;
+                    status.style.color = 'var(--success)';
+                }
+                showToast('تم العنوان', 'العنوان اتنقل لخانة العنوان من الخريطة', 'success');
+                return location;
+            } catch (_) {
+                if (status) {
+                    status.innerText = 'لم نقدر نحدد موقعك. اسمح بالموقع وحاول تاني.';
+                    status.style.color = 'var(--danger)';
+                }
+                showToast('إذن الموقع مطلوب', 'اسمح للتطبيق باستخدام موقعك عشان نملا العنوان من الخريطة', 'error');
+                throw new Error('location permission denied');
+            }
         };
 
         async function readCustomerPhoto() {
@@ -1295,24 +1904,73 @@
 
         window.saveAndEnter = async function() {
             const name = document.getElementById("userName").value.trim();
-            const phone = document.getElementById("userPhone").value.trim();
+            const phone = document.getElementById("userPhone").value.replace(/\D/g, '');
             const address = document.getElementById("userAddress").value.trim();
-            if (!name || !phone) {
-                showToast('بيانات ناقصة!', 'برجاء إدخال الاسم والهاتف', 'error');
+            const mode = document.getElementById('register-section').dataset.mode || 'new';
+
+            if (!name) {
+                showToast('بيانات ناقصة!', 'برجاء إدخال الاسم', 'error');
                 return;
             }
-            if (!customerData.location) {
-                try { await window.captureLocation(); } catch (error) { return; }
+            if (!validatePhone(phone)) {
+                showToast('رقم غير صحيح!', 'رقم الهاتف لازم يكون 11 رقم ويبدأ بـ 01', 'error');
+                return;
             }
+            
+            // العنوان اختياري الآن - ليس شرطاً للتسجيل
             const photo = await readCustomerPhoto();
+            const finalAddress = address || 'غير محدد';
+            
+            // الموقع اختياري أيضاً
+            if (!customerData.location) {
+                try { 
+                    await window.captureLocation(); 
+                } catch (error) {
+                    console.log('Location capture failed, continuing without location');
+                }
+            }
             
             localStorage.setItem("elsarokh_userName", name);
             localStorage.setItem("elsarokh_userPhone", phone);
-            localStorage.setItem("elsarokh_userAddress", address);
+            localStorage.setItem("elsarokh_userAddress", finalAddress);
             if (photo) localStorage.setItem('elsarokh_userPhoto', photo);
-            customerData = { name, phone, address, location: customerData.location, photo };
-            showToast('أهلاً بك! 🎉', `تم التسجيل بنجاح يا ${name}`, 'success');
-            window.enterApp();
+            customerData = { name, phone, address: finalAddress, location: customerData.location, photo: photo || customerData.photo || '' };
+
+            try {
+                const customerPayload = {
+                    name,
+                    phone,
+                    address: finalAddress,
+                    location: customerData.location || null,
+                    photo: customerData.photo || '',
+                    updatedAt: new Date().getTime()
+                };
+                const existingQ = query(collection(db, "Customers"), where("phone", "==", phone));
+                const existingSnap = await getDocs(existingQ);
+                if (existingSnap.empty) {
+                    customerPayload.createdAt = new Date().getTime();
+                    customerPayload.isNew = true;
+                    await addDoc(collection(db, "Customers"), customerPayload);
+                } else {
+                    existingSnap.forEach(async (docSnap) => {
+                        await updateDoc(doc(db, "Customers", docSnap.id), customerPayload);
+                    });
+                }
+            } catch (error) {
+                console.error('Error saving customer:', error);
+                // نستمر حتى لو فشل Firebase - البيانات محفوظة في localStorage
+            }
+
+            resetRegisterFormMode();
+            showToast('تم الحفظ! 🎉', mode.startsWith('edit') ? `تم تحديث بياناتك يا ${name}` : `تم التسجيل بنجاح يا ${name}`, 'success');
+
+            if (mode === 'edit-app') {
+                window.enterApp();
+            } else if (mode === 'edit-welcome') {
+                showCustomerEntry(customerData);
+            } else {
+                window.enterApp();
+            }
         };
 
         window.switchUser = function() {
@@ -1327,16 +1985,315 @@
         };
 
         window.enterApp = async function() {
-            if (!customerData.location) {
-                try { await window.captureLocation(); } catch (error) { return; }
+            try {
+                if (!customerData.name || !customerData.phone) {
+                    showCustomerEntry(null);
+                    return;
+                }
+                
+                // الموقع اختياري - لا نمنع الدخول إذا لم يكن موجوداً
+                if (!customerData.location) {
+                    try { 
+                        await window.captureLocation(); 
+                    } catch (error) {
+                        console.log('Location capture failed, entering app without location');
+                    }
+                }
+                
+                document.getElementById("splash-screen").classList.add("hidden");
+                document.getElementById("main-app").classList.remove("hidden");
+                document.getElementById("header-name").innerText = customerData.name || 'العميل';
+                
+                try {
+                    loadFavorites();
+                } catch (error) {
+                    console.error('Error loading favorites:', error);
+                }
+                
+                try {
+                    loadRestaurants();
+                } catch (error) {
+                    console.error('Error loading restaurants:', error);
+                }
+                
+                try {
+                    loadMyOrders();
+                } catch (error) {
+                    console.error('Error loading orders:', error);
+                }
+                
+                const savedOrderId = localStorage.getItem('elsarokh_activeOrderId');
+                if (savedOrderId) {
+                    try {
+                        listenToOrderUpdates(savedOrderId);
+                    } catch (error) {
+                        console.error('Error listening to order updates:', error);
+                    }
+                }
+            } catch (error) {
+                console.error('Error entering app:', error);
+                showToast('حدث خطأ', 'حاول تحديث الصفحة', 'error');
             }
-            document.getElementById("splash-screen").classList.add("hidden");
-            document.getElementById("main-app").classList.remove("hidden");
-            document.getElementById("header-name").innerText = customerData.name || 'العميل';
-            loadRestaurants();
-            const savedOrderId = localStorage.getItem('elsarokh_activeOrderId');
-            if (savedOrderId) listenToOrderUpdates(savedOrderId);
         };
+
+        /* ========== نظام المفضلة ========== */
+        function loadFavorites() {
+            const key = 'elsarokh_favs_' + (customerData.phone || 'default');
+            try {
+                const saved = JSON.parse(localStorage.getItem(key) || '{"restaurants":[],"products":[]}');
+                favorites = {
+                    restaurants: Array.isArray(saved.restaurants) ? saved.restaurants : [],
+                    products: Array.isArray(saved.products) ? saved.products : []
+                };
+            } catch (_) {
+                favorites = { restaurants: [], products: [] };
+            }
+            updateFavBadge();
+            syncFavoritesToFirestore();
+        }
+
+        async function syncFavoritesToFirestore() {
+            if (!customerData.phone) return;
+            try {
+                const q = query(collection(db, "Customers"), where("phone", "==", customerData.phone));
+                const snap = await getDocs(q);
+                snap.forEach(async (d) => {
+                    try {
+                        await updateDoc(doc(db, "Customers", d.id), {
+                            favorites: favorites,
+                            favoritesUpdatedAt: new Date().getTime()
+                        });
+                    } catch (_) {}
+                });
+            } catch (_) {}
+        }
+
+        function saveFavorites() {
+            const key = 'elsarokh_favs_' + (customerData.phone || 'default');
+            localStorage.setItem(key, JSON.stringify(favorites));
+            updateFavBadge();
+            syncFavoritesToFirestore();
+            if (currentView === 'favorites') renderFavorites();
+            if (currentView === 'home') renderRestaurants(allRestaurants);
+            if (currentRestId && currentView !== 'favorites') {
+                const prods = currentRestId ? allProducts.filter(p => p.restId === currentRestId) : allProducts;
+                renderProducts(prods);
+            }
+        }
+
+        function isFavorite(type, id) {
+            if (!id) return false;
+            if (type === 'rest') return favorites.restaurants.some(r => r.id === id);
+            if (type === 'prod') return favorites.products.some(p => p.id === id);
+            return false;
+        }
+
+        window.toggleFavorite = function(type, id, name, image, restId, restName) {
+            if (type === 'rest') {
+                const idx = favorites.restaurants.findIndex(r => r.id === id);
+                if (idx >= 0) {
+                    favorites.restaurants.splice(idx, 1);
+                    showToast('تمت الإزالة', 'المحل اتمسح من المفضلة', 'info');
+                } else {
+                    favorites.restaurants.unshift({ id, name, image: image || '', addedAt: new Date().getTime() });
+                    showToast('💖 تم الإضافة', `${name} اتضيف للمفضلة`, 'success');
+                }
+            } else if (type === 'prod') {
+                const idx = favorites.products.findIndex(p => p.id === id);
+                if (idx >= 0) {
+                    favorites.products.splice(idx, 1);
+                    showToast('تمت الإزالة', 'المنتج اتمسح من المفضلة', 'info');
+                } else {
+                    favorites.products.unshift({
+                        id, name, image: image || '',
+                        restId: restId || '', restName: restName || '',
+                        addedAt: new Date().getTime()
+                    });
+                    showToast('💖 تم الإضافة', `${name} اتضيف للمفضلة`, 'success');
+                }
+            }
+            saveFavorites();
+        };
+
+        function updateFavBadge() {
+            const total = (favorites.restaurants.length || 0) + (favorites.products.length || 0);
+            const badge = document.getElementById('fav-count');
+            const tabSpan = document.getElementById('tab-fav-count');
+            if (total > 0) {
+                badge.innerText = total;
+                badge.classList.remove('hidden');
+                if (tabSpan) {
+                    tabSpan.innerText = `(${total})`;
+                    tabSpan.style.display = 'inline';
+                }
+            } else {
+                badge.classList.add('hidden');
+                if (tabSpan) {
+                    tabSpan.style.display = 'none';
+                }
+            }
+        }
+
+        /* ========== التبويبات والعروض ========== */
+        window.switchView = function(view, btnElement) {
+            currentView = view;
+            document.querySelectorAll('.view-tab').forEach(b => b.classList.remove('active'));
+            const targetBtn = btnElement || document.querySelector(`.view-tab[data-view="${view}"]`);
+            if (targetBtn) targetBtn.classList.add('active');
+
+            document.getElementById('restaurants-view').classList.add('hidden');
+            document.getElementById('products-view').classList.add('hidden');
+            document.getElementById('favorites-view').classList.add('hidden');
+            document.getElementById('my-orders-view').classList.add('hidden');
+            document.getElementById('categories-section').classList.add('hidden');
+
+            if (view === 'home') {
+                document.getElementById('restaurants-view').classList.remove('hidden');
+                document.getElementById('categories-section').classList.remove('hidden');
+                currentRestId = null;
+                showAllProductsMode = false;
+                renderRestaurants(allRestaurants);
+            } else if (view === 'favorites') {
+                document.getElementById('favorites-view').classList.remove('hidden');
+                renderFavorites();
+            } else if (view === 'orders') {
+                document.getElementById('my-orders-view').classList.remove('hidden');
+                renderMyOrders();
+            }
+        };
+
+        function renderFavorites() {
+            const total = (favorites.restaurants.length || 0) + (favorites.products.length || 0);
+            document.getElementById('favorites-count').innerText = `${total} عنصر محفوظ`;
+
+            const restList = document.getElementById('fav-restaurants-list');
+            const restBlock = document.getElementById('fav-restaurants-block');
+            if (favorites.restaurants.length === 0) {
+                restBlock.style.display = 'none';
+            } else {
+                restBlock.style.display = '';
+                restList.innerHTML = '';
+                favorites.restaurants.forEach(r => {
+                    restList.innerHTML += `
+                        <div class="restaurant-card" onclick="window.openRestaurant('${r.id}', '${escapeHtml(r.name)}'); window.switchView('home');">
+                            <img class="restaurant-image" src="${r.image}" alt="${escapeHtml(r.name)}" onerror="this.style.background='linear-gradient(135deg,#ffedd5,#fed7aa)';this.src='';">
+                            <div class="restaurant-badge">🚚 10 ج.م</div>
+                            <button class="fav-btn filled" onclick="event.stopPropagation(); window.toggleFavorite('rest', '${r.id}', '${escapeHtml(r.name)}', '${escapeHtml(r.image || '')}')">💖</button>
+                            <div class="restaurant-content">
+                                <div class="restaurant-top">
+                                    <h3 class="restaurant-name">${escapeHtml(r.name)}</h3>
+                                </div>
+                                <div class="restaurant-meta">
+                                    <span>⏱️ توصيل سريع</span>
+                                    <span>📍 القناطر</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            const prodList = document.getElementById('fav-products-list');
+            const prodBlock = document.getElementById('fav-products-block');
+            if (favorites.products.length === 0) {
+                prodBlock.style.display = 'none';
+            } else {
+                prodBlock.style.display = '';
+                prodList.innerHTML = '';
+                favorites.products.forEach(p => {
+                    const restBadge = p.restName ? `<p style="margin:2px 0 0 0;font-size:12px;color:var(--medium-text);">من: ${escapeHtml(p.restName)}</p>` : '';
+                    const sourceProd = allProducts.find(ap => ap.id === p.id);
+                    const price = sourceProd?.price || 0;
+                    prodList.innerHTML += `
+                        <div class="product-card">
+                            <div class="product-image-wrap">
+                                <img class="product-image" src="${p.image}" alt="${escapeHtml(p.name)}" onerror="this.style.background='linear-gradient(135deg,#ffedd5,#fed7aa)';this.src='';">
+                                <button class="fav-btn filled" onclick="event.stopPropagation(); window.toggleFavorite('prod', '${p.id}', '${escapeHtml(p.name)}', '${escapeHtml(p.image || '')}', '${p.restId || ''}', '${escapeHtml(p.restName || '')}')">💖</button>
+                            </div>
+                            <div class="product-info">
+                                <div>
+                                    <h3 class="product-name">${escapeHtml(p.name)}</h3>
+                                    ${restBadge}
+                                </div>
+                                <div class="product-bottom">
+                                    <span class="product-price">${price} ج.م</span>
+                                    ${price > 0 ? `<button class="add-btn" onclick="window.addToCart('${p.id}', '${escapeHtml(p.name)}', ${price}, '${p.restId || ''}', '${p.image || ''}')">+ إضافة</button>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            if (total === 0) {
+                document.getElementById('fav-products-block').style.display = '';
+                document.getElementById('fav-restaurants-block').style.display = 'none';
+                prodList.innerHTML = getEmptyStateHtml('💖', 'لا عناصر في المفضلة بعد', 'أضف المحلات والمنتجات اللي تحبها عن طريق أيقونة القلب');
+            }
+        }
+
+        /* ========== عرض طلباتي السابقة ========== */
+        function loadMyOrders() {
+            if (!customerData.phone) return;
+            try {
+                const q = query(collection(db, "Orders"), where("customerPhone", "==", customerData.phone), orderBy("timestamp", "desc"));
+                onSnapshot(q, (snap) => {
+                    myOrders = [];
+                    snap.forEach(d => myOrders.push({ id: d.id, ...d.data() }));
+                    if (currentView === 'orders') renderMyOrders();
+                });
+            } catch (_) {}
+        }
+
+        function renderMyOrders() {
+            const container = document.getElementById('my-orders-list');
+            const countEl = document.getElementById('my-orders-count');
+            countEl.innerText = `${myOrders.length} طلب`;
+            if (myOrders.length === 0) {
+                container.innerHTML = getEmptyStateHtml('📦', 'لا طلبات بعد', 'الطلبات القديمة هتظهر هنا تلقائياً');
+                return;
+            }
+            container.innerHTML = '';
+            myOrders.forEach(o => {
+                const items = o.items || [];
+                const itemsHtml = items.slice(0, 4).map(i => `<span style="background:white;padding:4px 10px;border-radius:8px;font-size:12px;font-weight:700;border:1px solid #eee;">${escapeHtml(i.name)} ×${i.qty}</span>`).join(' ');
+                const restHtml = items.length > 4 ? `<span style="font-size:12px;color:var(--medium-text);font-weight:700;">+ ${items.length - 4} عناصر أخرى</span>` : '';
+                const statusMap = {
+                    pending: { t: '⏳ قيد المراجعة', c: 'var(--warning)' },
+                    accepted: { t: '✅ تم القبول', c: 'var(--info)' },
+                    assigned: { t: '🚀 في الطريق', c: 'var(--primary-orange)' },
+                    delivered: { t: '📦 تم التسليم', c: 'var(--success)' },
+                    cancelled: { t: '❌ ملغي', c: 'var(--danger)' }
+                };
+                const s = statusMap[o.status] || { t: o.status || '--', c: 'var(--medium-text)' };
+                const dateStr = o.timestamp ? new Date(o.timestamp).toLocaleString('ar-EG') : '--';
+                container.innerHTML += `
+                    <div class="restaurant-card" style="cursor:default;">
+                        <div style="padding:16px;">
+                            <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;">
+                                <div>
+                                    <h3 style="margin:0 0 4px;font-size:17px;color:var(--dark-text);font-weight:900;">📦 طلب رقم #${o.orderNumber || o.id.slice(0, 6)}</h3>
+                                    <p style="margin:0;font-size:12px;color:var(--medium-text);font-weight:700;">${dateStr}</p>
+                                </div>
+                                <span style="padding:6px 12px;border-radius:10px;color:white;background:${s.c};font-weight:900;font-size:12px;">${s.t}</span>
+                            </div>
+                            <div style="display:flex;flex-wrap:wrap;gap:6px;margin:10px 0;">
+                                ${itemsHtml}
+                                ${restHtml}
+                            </div>
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:12px;border-top:1px dashed #eee;">
+                                <div>
+                                    <div style="font-size:11px;color:var(--medium-text);font-weight:800;">الإجمالي</div>
+                                    <div style="font-size:18px;color:var(--primary-orange);font-weight:900;">${o.totalPrice || '—'} ج.م</div>
+                                </div>
+                                ${o.feedback ? `<div class="rating-mini gold-bg">⭐ ${o.feedback.rating || 0}.0</div>` : ''}
+                                ${o.driverName ? `<div style="max-width:40%;text-align:left;"><div style="font-size:11px;color:var(--medium-text);font-weight:800;">الطيار</div><div style="font-size:13px;font-weight:800;">🛵 ${escapeHtml(o.driverName)}</div></div>` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
 
         /* ========== البحث والفلترة ========== */
         window.handleSearch = function(term) {
@@ -1485,10 +2442,14 @@
                 
                 filteredRests.forEach((r) => {
                     const delFee = 10;
+                    const isFav = isFavorite('rest', r.id);
                     list.innerHTML += `
                         <div class="restaurant-card" onclick="window.openRestaurant('${r.id}', '${escapeHtml(r.name)}')">
                             <img class="restaurant-image" src="${r.image}" alt="${escapeHtml(r.name)}" onerror="this.style.background='linear-gradient(135deg,#ffedd5,#fed7aa)';this.src='';">
                             <div class="restaurant-badge">🚚 ${delFee} ج.م</div>
+                            <button class="fav-btn ${isFav ? 'filled' : ''}" onclick="event.stopPropagation(); window.toggleFavorite('rest', '${r.id}', '${escapeHtml(r.name)}', '${escapeHtml(r.image || '')}')">
+                                ${isFav ? '💖' : '🤍'}
+                            </button>
                             <div class="restaurant-content">
                                 <div class="restaurant-top">
                                     <h3 class="restaurant-name">${escapeHtml(r.name)}</h3>
@@ -1507,7 +2468,7 @@
 
             if (filteredRests.length === 0) {
                 list.innerHTML = getEmptyStateHtml(
-                    currentSearchTerm ? '🔍' : '�',
+                    currentSearchTerm ? '🔍' : '🛒',
                     currentSearchTerm ? 'لا توجد نتائج للبحث' : 'لا توجد محلات بعد',
                     currentSearchTerm ? 'جرب كلمات بحث أخرى' : 'سيتم إضافة المحلات قريباً'
                 );
@@ -1517,10 +2478,14 @@
             list.innerHTML = '';
             filteredRests.forEach((r) => {
                 const delFee = 10;
+                const isFav = isFavorite('rest', r.id);
                 list.innerHTML += `
                     <div class="restaurant-card" onclick="window.openRestaurant('${r.id}', '${escapeHtml(r.name)}')">
                         <img class="restaurant-image" src="${r.image}" alt="${escapeHtml(r.name)}" onerror="this.style.background='linear-gradient(135deg,#ffedd5,#fed7aa)';this.src='';">
                         <div class="restaurant-badge">🚚 ${delFee} ج.م</div>
+                        <button class="fav-btn ${isFav ? 'filled' : ''}" onclick="event.stopPropagation(); window.toggleFavorite('rest', '${r.id}', '${escapeHtml(r.name)}', '${escapeHtml(r.image || '')}')">
+                            ${isFav ? '💖' : '🤍'}
+                        </button>
                         <div class="restaurant-content">
                             <div class="restaurant-top">
                                 <h3 class="restaurant-name">${escapeHtml(r.name)}</h3>
@@ -1598,10 +2563,14 @@
                 const img = p.image || '';
                 const restName = allRestaurants.find(r => r.id === p.restId)?.name || '';
                 const restBadge = !currentRestId ? `<p style="margin:2px 0 0 0;font-size:12px;color:var(--medium-text);">من: ${escapeHtml(restName)}</p>` : '';
+                const isFav = isFavorite('prod', p.id);
                 container.innerHTML += `
                     <div class="product-card">
                         <div class="product-image-wrap">
                             <img class="product-image" src="${img}" alt="${escapeHtml(p.name)}" onerror="this.style.background='linear-gradient(135deg,#ffedd5,#fed7aa)';this.src='';">
+                            <button class="fav-btn ${isFav ? 'filled' : ''}" onclick="event.stopPropagation(); window.toggleFavorite('prod', '${p.id}', '${escapeHtml(p.name)}', '${escapeHtml(img || '')}', '${p.restId}', '${escapeHtml(restName)}')">
+                                ${isFav ? '💖' : '🤍'}
+                            </button>
                         </div>
                         <div class="product-info">
                             <div>
@@ -1738,13 +2707,15 @@
                 id: i.id, name: i.name, price: i.price, qty: i.qty, restId: i.restId
             }));
 
+            const orderPhoto = await readCustomerPhoto();
+
             const orderData = {
                 orderNumber: Math.floor(100000 + Math.random() * 900000),
                 customerName: customerData.name,
                 customerPhone: customerData.phone,
                 customerAddress: customerData.address || '',
                 customerLocation: customerData.location,
-                customerPhoto: customerData.photo || '',
+                customerPhoto: orderPhoto || customerData.photo || '',
                 items: orderItems,
                 subtotal: subtotal,
                 deliveryFee: delivery,
@@ -1771,45 +2742,170 @@
         };
 
         function listenToOrderUpdates(orderDocId) {
+            activeOrderId = orderDocId;
             onSnapshot(doc(db, "Orders", orderDocId), (docSnap) => {
-                if(docSnap.exists()) {
-                    const data = docSnap.data();
-                    if(data.status === 'on_the_way') {
-                        document.getElementById('driver-info-card').classList.remove('hidden');
-                        document.getElementById('driverName').innerText = data.driverName;
-                        const driverPhone = document.getElementById('driverPhone');
-                        driverPhone.innerText = data.driverPhone || 'غير متاح';
-                        driverPhone.href = data.driverPhone ? `tel:${data.driverPhone}` : '#';
-                        document.getElementById('driverVehicle').innerText = data.driverVehicle || 'غير مسجلة';
-                        document.getElementById('trackingOrderNumber').innerText = `#${data.orderNumber || orderDocId}`;
-                        listenToDriverLocation(data.driverId);
-                        if (lastTrackedOrderStatus !== data.status) {
-                            notifyCustomer('الطلب في الطريق! 🛵', `الطيار ${data.driverName} معاك الآن`);
-                        }
-                    } else if(data.status === 'delivered') {
-                        document.getElementById('driver-info-card').classList.add('hidden');
-                        if (lastTrackedOrderStatus !== data.status) {
-                            notifyCustomer('تم التسليم! ✅', 'تم تسليم طلبك بنجاح. شكراً لاستخدامك الصاروووخ!');
-                        }
-                        if (driverLocationUnsubscribe) { driverLocationUnsubscribe(); driverLocationUnsubscribe = null; }
+                if(!docSnap.exists()) return;
+                const data = docSnap.data();
+                const card = document.getElementById('driver-info-card');
+                const assignedBlock = document.getElementById('assigned-driver-block');
+                const pendingBlock = document.getElementById('pending-driver-block');
+                const title = document.getElementById('order-track-title');
+                document.getElementById('trackingOrderNumber').innerText = `#${data.orderNumber || orderDocId}`;
+
+                if(data.status === 'pending') {
+                    card.classList.remove('hidden');
+                    card.classList.add('pending-card');
+                    title.innerText = '⏳ طلبك قيد المراجعة';
+                    assignedBlock.classList.add('hidden');
+                    pendingBlock.classList.remove('hidden');
+                    if (lastTrackedOrderStatus !== data.status) {
+                        notifyCustomer('تم استلام طلبك', `طلب رقم #${data.orderNumber} هيتعين عليه طيار من الإدارة`);
                     }
-                    lastTrackedOrderStatus = data.status;
+                } else if(data.status === 'on_the_way') {
+                    card.classList.remove('hidden');
+                    card.classList.remove('pending-card');
+                    title.innerText = '🚀 طلبك في الطريق!';
+                    assignedBlock.classList.remove('hidden');
+                    pendingBlock.classList.add('hidden');
+                    fillDriverDetails(data);
+                    listenToDriverLocation(data.driverId, data);
+                    if (lastTrackedOrderStatus !== data.status) {
+                        notifyCustomer('الطلب في الطريق! 🛵', `الطيار ${data.driverName || ''} معاك الآن`);
+                    }
+                } else if(data.status === 'delivered') {
+                    card.classList.add('hidden');
+                    if (driverLocationUnsubscribe) { driverLocationUnsubscribe(); driverLocationUnsubscribe = null; }
+                    if (lastTrackedOrderStatus !== data.status) {
+                        notifyCustomer('تم التسليم! ✅', 'تم تسليم طلبك بنجاح. قيّم الطيار من فضلك');
+                    }
+                    if (!data.feedback) {
+                        showRatingModal(orderDocId, data);
+                    }
+                }
+                lastTrackedOrderStatus = data.status;
+            });
+        }
+
+        function fillDriverDetails(orderData, driverDoc) {
+            const name = driverDoc?.name || orderData.driverName || '--';
+            const phone = driverDoc?.phone || orderData.driverPhone || '';
+            const vehicle = driverDoc?.vehicle || orderData.driverVehicle || 'غير مسجلة';
+            const count = driverDoc?.ratingsCount || 0;
+            const avg = count ? (driverDoc.ratingsSum / count).toFixed(1) : null;
+
+            document.getElementById('driverName').innerText = name;
+            document.getElementById('driverAvatar').innerText = name ? name.charAt(0) : 'ط';
+            document.getElementById('driverVehicle').innerText = '🛵 ' + (vehicle || 'مركبة غير مسجلة');
+
+            const ratingBadge = document.getElementById('driverRatingBadge');
+            if (avg && count > 0) {
+                ratingBadge.style.display = 'inline-flex';
+                document.getElementById('driverRatingText').innerText = `${avg} (${count} تقييم)`;
+            } else {
+                ratingBadge.style.display = 'none';
+            }
+
+            const driverPhone = document.getElementById('driverPhone');
+            if (phone) {
+                driverPhone.href = `tel:${phone}`;
+                driverPhone.innerHTML = `📞 <span>${phone}</span>`;
+                driverPhone.style.pointerEvents = 'auto';
+                driverPhone.style.opacity = '1';
+            } else {
+                driverPhone.href = '#';
+                driverPhone.innerHTML = '📞 غير متاح';
+                driverPhone.style.pointerEvents = 'none';
+                driverPhone.style.opacity = '0.5';
+            }
+
+            const driverWhatsApp = document.getElementById('driverWhatsApp');
+            if (phone) {
+                const waMsg = encodeURIComponent(`مرحباً ${name}، أنا العميل لطلب #${orderData.orderNumber || ''} من تطبيق الصاروووخ 🚀`);
+                driverWhatsApp.href = `https://wa.me/2${phone}?text=${waMsg}`;
+                driverWhatsApp.style.pointerEvents = 'auto';
+                driverWhatsApp.style.opacity = '1';
+            } else {
+                driverWhatsApp.href = '#';
+                driverWhatsApp.style.pointerEvents = 'none';
+                driverWhatsApp.style.opacity = '0.5';
+            }
+        }
+
+        function listenToDriverLocation(driverId, orderData) {
+            if (!driverId) return;
+            if (driverLocationUnsubscribe) driverLocationUnsubscribe();
+            driverLocationUnsubscribe = onSnapshot(doc(db, 'Drivers', driverId), driverSnap => {
+                const driverDoc = driverSnap.exists() ? driverSnap.data() : {};
+                fillDriverDetails(orderData || {}, driverDoc);
+                const location = driverDoc.currentLocation || null;
+                const link = document.getElementById('driverLocationLink');
+                if (!link) return;
+                if (location?.mapsUrl) {
+                    link.href = location.mapsUrl;
+                    link.innerHTML = '📍 الموقع الحالي';
+                    link.style.pointerEvents = 'auto';
+                    link.style.opacity = '1';
+                } else {
+                    link.href = '#';
+                    link.innerHTML = '📍 جاري التحديث';
+                    link.style.pointerEvents = 'none';
                 }
             });
         }
 
-        function listenToDriverLocation(driverId) {
-            if (!driverId) return;
-            if (driverLocationUnsubscribe) driverLocationUnsubscribe();
-            driverLocationUnsubscribe = onSnapshot(doc(db, 'Drivers', driverId), driverSnap => {
-                const location = driverSnap.exists() ? driverSnap.data().currentLocation : null;
-                const link = document.getElementById('driverLocationLink');
-                if (location?.mapsUrl) {
-                    link.href = location.mapsUrl;
-                    link.innerText = 'فتح موقعه على الخريطة 📍';
-                }
+        window.setRatingStars = function(value) {
+            selectedRating = value;
+            document.querySelectorAll('#star-row .star-btn').forEach(btn => {
+                btn.classList.toggle('active', Number(btn.dataset.star) <= value);
             });
+        };
+
+        function showRatingModal(orderId, orderData) {
+            pendingFeedbackOrder = { id: orderId, ...orderData };
+            selectedRating = 0;
+            document.querySelectorAll('#star-row .star-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('rating-comment').value = '';
+            document.getElementById('rating-driver-name').innerText = `قيّم الطيار ${orderData.driverName || ''}`;
+            document.getElementById('rating-overlay').classList.remove('hidden');
         }
+
+        window.skipDriverFeedback = function() {
+            document.getElementById('rating-overlay').classList.add('hidden');
+        };
+
+        window.submitDriverFeedback = async function() {
+            if (!pendingFeedbackOrder) return;
+            if (!selectedRating) {
+                showToast('اختار النجوم', 'اختار تقييم من 1 لـ 5 نجوم', 'error');
+                return;
+            }
+            const comment = document.getElementById('rating-comment').value.trim();
+            const feedback = {
+                rating: selectedRating,
+                comment,
+                customerName: customerData.name || '',
+                customerPhone: customerData.phone || '',
+                driverId: pendingFeedbackOrder.driverId || '',
+                driverName: pendingFeedbackOrder.driverName || '',
+                createdAt: Date.now()
+            };
+            try {
+                await updateDoc(doc(db, 'Orders', pendingFeedbackOrder.id), { feedback });
+                if (pendingFeedbackOrder.driverId) {
+                    await updateDoc(doc(db, 'Drivers', pendingFeedbackOrder.driverId), {
+                        ratingsCount: increment(1),
+                        ratingsSum: increment(selectedRating),
+                        lastFeedback: comment,
+                        lastRating: selectedRating
+                    });
+                }
+                document.getElementById('rating-overlay').classList.add('hidden');
+                pendingFeedbackOrder = null;
+                showToast('شكراً لتقييمك', 'تم إرسال التقييم للإدارة', 'success');
+            } catch (error) {
+                showToast('خطأ', 'حصل مشكلة أثناء إرسال التقييم', 'error');
+            }
+        };
     </script>
 </body>
 </html>
