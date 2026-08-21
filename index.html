@@ -1800,12 +1800,38 @@
 
         async function reverseGeocode(lat, lng) {
             try {
-                const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&zoom=18&accept-language=ar`;
-                const res = await fetch(url, { headers: { Accept: 'application/json' } });
+                // استخدام OpenStreetMap مع زيادة الدقة
+                const url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&zoom=19&accept-language=ar-EG`;
+                const res = await fetch(url, { 
+                    headers: { 
+                        'Accept': 'application/json',
+                        'User-Agent': 'elsarokh-market/1.0'
+                    } 
+                });
                 if (!res.ok) throw new Error('geocode failed');
                 const data = await res.json();
-                return data.display_name || '';
-            } catch (_) {
+                
+                // تحسين العنوان - إزالة التفاصيل غير المهمة
+                let address = data.display_name || '';
+                
+                // إزالة البلد إذا كان مصر
+                address = address.replace(/، مصر/g, '');
+                address = address.replace(/Egypt/g, '');
+                
+                // إزالة الرموز الزائدة
+                address = address.replace(/،\s*$/g, '');
+                
+                // إضافة اسم المنطقة إذا لم يكن موجوداً
+                if (!address.includes('القنطرة') && !address.includes('غرب')) {
+                    // محاولة إضافة اسم المنطقة من الإحداثيات التقريبية
+                    if (lat > 30.1 && lat < 30.2 && lng > 31.1 && lng < 31.3) {
+                        address = `القنطرة غرب، ${address}`;
+                    }
+                }
+                
+                return address.trim();
+            } catch (error) {
+                console.error('Geocoding error:', error);
                 return '';
             }
         }
@@ -1813,7 +1839,7 @@
         window.captureLocation = async function() {
             const status = document.getElementById('location-status');
             if (status) {
-                status.innerText = 'جاري تحديد موقعك من الخريطة...';
+                status.innerText = 'جاري تحديد موقعك من الخريطة بدقة عالية...';
                 status.style.color = 'var(--medium-text)';
             }
 
@@ -1823,25 +1849,79 @@
 
                 if (CapGeo) {
                     const perm = await CapGeo.requestPermissions();
-                    if (perm.location === 'denied') throw new Error('location permission denied');
-                    const position = await CapGeo.getCurrentPosition({
-                        enableHighAccuracy: true,
-                        timeout: 15000
-                    });
-                    latitude = position.coords.latitude;
-                    longitude = position.coords.longitude;
-                    accuracy = position.coords.accuracy;
+                    if (perm.location === 'denied' || perm.location === 'permanently_denied') {
+                        showToast('الموقع مطلوب', 'اسمح بالموقع حتى نحدد عنوانك بدقة', 'error');
+                        throw new Error('location permission denied');
+                    }
+                    
+                    // محاولة متعددة للحصول على أفضل دقة
+                    let bestPosition = null;
+                    let bestAccuracy = Infinity;
+                    
+                    for (let i = 0; i < 3; i++) {
+                        try {
+                            const position = await CapGeo.getCurrentPosition({
+                                enableHighAccuracy: true,
+                                timeout: 20000,
+                                maximumAge: 0
+                            });
+                            
+                            if (position.coords.accuracy < bestAccuracy) {
+                                bestAccuracy = position.coords.accuracy;
+                                bestPosition = position;
+                            }
+                            
+                            // إذا كانت الدقة جيدة بما يكفي، نوقف المحاولات
+                            if (bestAccuracy < 50) break;
+                            
+                            // انتظار قصير قبل المحاولة التالية
+                            await new Promise(resolve => setTimeout(resolve, 1000));
+                        } catch (e) {
+                            console.error(`Attempt ${i + 1} failed:`, e);
+                        }
+                    }
+                    
+                    if (!bestPosition) throw new Error('Failed to get location');
+                    
+                    latitude = bestPosition.coords.latitude;
+                    longitude = bestPosition.coords.longitude;
+                    accuracy = bestPosition.coords.accuracy;
+                    
                 } else if (navigator.geolocation) {
-                    const position = await new Promise((resolve, reject) => {
-                        navigator.geolocation.getCurrentPosition(resolve, reject, {
-                            enableHighAccuracy: true,
-                            timeout: 15000,
-                            maximumAge: 0
-                        });
-                    });
-                    latitude = position.coords.latitude;
-                    longitude = position.coords.longitude;
-                    accuracy = position.coords.accuracy;
+                    // محاولة متعددة للحصول على أفضل دقة
+                    let bestPosition = null;
+                    let bestAccuracy = Infinity;
+                    
+                    for (let i = 0; i < 3; i++) {
+                        try {
+                            const position = await new Promise((resolve, reject) => {
+                                navigator.geolocation.getCurrentPosition(resolve, reject, {
+                                    enableHighAccuracy: true,
+                                    timeout: 20000,
+                                    maximumAge: 0
+                                });
+                            });
+                            
+                            if (position.coords.accuracy < bestAccuracy) {
+                                bestAccuracy = position.coords.accuracy;
+                                bestPosition = position;
+                            }
+                            
+                            // إذا كانت الدقة جيدة بما يكيف، نوقف المحاولات
+                            if (bestAccuracy < 50) break;
+                            
+                            // انتظار قصير قبل المحاولة التالية
+                            await new Promise(resolve => setTimeout(resolve, 1000));
+                        } catch (e) {
+                            console.error(`Attempt ${i + 1} failed:`, e);
+                        }
+                    }
+                    
+                    if (!bestPosition) throw new Error('Failed to get location');
+                    
+                    latitude = bestPosition.coords.latitude;
+                    longitude = bestPosition.coords.longitude;
+                    accuracy = bestPosition.coords.accuracy;
                 } else {
                     showToast('الموقع غير متاح', 'افتح التطبيق من هاتف يدعم خدمة الموقع', 'error');
                     throw new Error('geolocation unavailable');
@@ -1858,7 +1938,10 @@
 
                 const addressField = document.getElementById('userAddress');
                 const geoAddress = await reverseGeocode(latitude, longitude);
-                const filledAddress = geoAddress || `${location.lat}, ${location.lng}`;
+                
+                // إذا لم يتم الحصول على عنوان، نعرض الإحداثيات
+                const filledAddress = geoAddress || `القنطرة غرب (${location.lat}, ${location.lng})`;
+                
                 if (addressField) {
                     addressField.value = filledAddress;
                 }
