@@ -1524,6 +1524,18 @@
                 <div class="summary-row"><span>المجموع الفرعي:</span><strong id="cart-subtotal">0 ج.م</strong></div>
                 <div class="summary-row" style="color: var(--primary-orange);"><span>رسوم التوصيل:</span><strong id="cart-delivery">0 ج.م</strong></div>
                 <div class="summary-row total"><span>الإجمالي:</span><strong class="total-val" id="cart-total">0 ج.م</strong></div>
+                
+                <div style="margin-top:12px;text-align:right;">
+                    <label for="orderNotes" style="display:block;font-weight:700;font-size:13px;margin-bottom:6px;">📝 ملاحظات على الطلب (اختياري)</label>
+                    <textarea id="orderNotes" placeholder="اكتب أي ملاحظات خاصة بطلبك..." style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;font-family:inherit;font-size:14px;resize:vertical;min-height:60px;"></textarea>
+                </div>
+                
+                <div style="margin-top:12px;text-align:right;">
+                    <label for="customItem" style="display:block;font-weight:700;font-size:13px;margin-bottom:6px;">✏️ طلب يدوي (مثل: خار، سندوتشات، إلخ)</label>
+                    <input type="text" id="customItem" placeholder="اكتب الطلب اليدوي هنا..." style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;font-family:inherit;font-size:14px;margin-bottom:8px;">
+                    <input type="number" id="customItemPrice" placeholder="السعر بالجنيه" min="0" step="0.5" style="width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;font-family:inherit;font-size:14px;">
+                </div>
+                
                 <div style="margin-top:12px;text-align:right;">
                     <label for="orderPhoto" style="display:block;font-weight:700;font-size:13px;margin-bottom:6px;">📷 صورة للطلب (اختياري — مش إجبارية)</label>
                     <input type="file" id="orderPhoto" accept="image/*" style="width:100%;font-family:inherit;" onchange="window.previewOrderPhoto(this)">
@@ -2869,11 +2881,32 @@
             const uniqueRests = new Set(cart.map(item => item.restId)).size;
             let delivery = uniqueRests === 1 ? 15 : (uniqueRests <= 3 ? 20 : 30);
             
+            const customItemName = document.getElementById('customItem').value.trim();
+            const customItemPrice = parseFloat(document.getElementById('customItemPrice').value) || 0;
+            let customItemTotal = 0;
+            
+            if (customItemName && customItemPrice > 0) {
+                customItemTotal = customItemPrice;
+                subtotal += customItemTotal;
+            }
+            
             const orderItems = cart.map(i => ({
                 id: i.id, name: i.name, price: i.price, qty: i.qty, restId: i.restId
             }));
+            
+            if (customItemName && customItemPrice > 0) {
+                orderItems.push({
+                    id: 'custom_' + Date.now(),
+                    name: customItemName,
+                    price: customItemPrice,
+                    qty: 1,
+                    restId: 'custom',
+                    isCustom: true
+                });
+            }
 
             const orderPhoto = await readCustomerPhoto();
+            const orderNotes = document.getElementById('orderNotes').value.trim();
 
             const orderData = {
                 orderNumber: Math.floor(100000 + Math.random() * 900000),
@@ -2886,6 +2919,7 @@
                 subtotal: subtotal,
                 deliveryFee: delivery,
                 totalPrice: subtotal + delivery,
+                notes: orderNotes,
                 status: 'pending',
                 driverId: null,
                 driverName: '',
@@ -2898,8 +2932,13 @@
                 
                 cart = [];
                 updateCartBadge();
-                window.closeCart();
-                localStorage.setItem('elsarokh_activeOrderId', docRef.id);
+                renderCart();
+                closeCart();
+                
+                document.getElementById('customItem').value = '';
+                document.getElementById('customItemPrice').value = '';
+                document.getElementById('orderNotes').value = '';
+                
                 listenToOrderUpdates(docRef.id);
                 
             } catch(e) {
