@@ -1322,6 +1322,72 @@
             box-shadow: var(--shadow-lg);
             animation: slideUp 0.35s cubic-bezier(0.16, 1, 0.3, 1);
         }
+
+        /* ========== Modal اختيار الحجم ========== */
+        .size-option {
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .size-option:hover {
+            border-color: var(--primary-orange);
+            background: #fff7ed;
+        }
+
+        .size-option.selected {
+            border-color: var(--primary-orange);
+            background: linear-gradient(135deg, #fff7ed, #ffedd5);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.15);
+        }
+
+        .size-option .size-name {
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--dark-text);
+        }
+
+        .size-option .size-price {
+            font-weight: 800;
+            font-size: 18px;
+            color: var(--primary-orange);
+        }
+
+        .size-option .size-desc {
+            font-size: 13px;
+            color: var(--medium-text);
+            margin-top: 4px;
+        }
+
+        .product-modal-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 16px;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #ffedd5, #fed7aa);
+        }
+
+        .product-modal-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--dark-text);
+            margin: 0 0 16px 0;
+        }
+
+        .sizes-section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--dark-text);
+            margin: 20px 0 12px 0;
+        }
     </style>
 </head>
 <body>
@@ -1563,6 +1629,21 @@
         </div>
     </div>
 
+    <!-- ================= Modal اختيار الحجم ================= -->
+    <div id="size-modal-overlay" class="modal-overlay hidden" onclick="if(event.target === this) window.closeSizeModal()">
+        <div class="modal-card" style="padding: 24px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+                <h2 style="margin:0;font-size:20px;font-weight:800;color:var(--dark-text);">اختر الحجم 📏</h2>
+                <button onclick="window.closeSizeModal()" style="background:#f3f4f6;border:none;width:36px;height:36px;border-radius:10px;cursor:pointer;font-size:18px;color:var(--medium-text);">✕</button>
+            </div>
+            <img id="size-modal-image" class="product-modal-image" src="" alt="">
+            <h3 id="size-modal-title" class="product-modal-title"></h3>
+            <h4 class="sizes-section-title">الأحجام المتاحة:</h4>
+            <div id="size-options-container"></div>
+            <button id="add-to-cart-with-size-btn" class="btn-primary" style="margin-top:16px;" disabled>إضافة للسلة</button>
+        </div>
+    </div>
+
     <!-- ================= 4. الجافاسكربت وربط Firebase ================= -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -1607,6 +1688,8 @@
         let favorites = { restaurants: [], products: [] };
         let currentView = 'home';
         let myOrders = [];
+        let currentProductForSize = null;
+        let selectedSize = null;
 
         function validatePhone(phone) {
             const digits = String(phone || '').replace(/\D/g, '');
@@ -2154,10 +2237,10 @@
                 newCustomerBtn.classList.remove('btn-primary');
                 newCustomerBtn.classList.add('btn-secondary');
                 registerTitle.innerText = 'سجل دخولك';
-                newCustomerFields.classList.add('hidden');
+                newCustomerFields.classList.remove('hidden'); // إظهار حقل الاسم في تسجيل الدخول
                 newCustomerAddressFields.classList.add('hidden');
                 registerSaveBtn.innerText = '🔐 تسجيل الدخول';
-                userName.required = false;
+                userName.required = true; // الاسم مطلوب في تسجيل الدخول
                 userAddress.required = false;
             }
         };
@@ -2414,10 +2497,16 @@
         function loadMyOrders() {
             if (!customerData.phone) return;
             try {
-                const q = query(collection(db, "Orders"), where("customerPhone", "==", customerData.phone), orderBy("timestamp", "desc"));
+                const q = query(collection(db, "Orders"), where("customerPhone", "==", customerData.phone));
                 onSnapshot(q, (snap) => {
                     myOrders = [];
                     snap.forEach(d => myOrders.push({ id: d.id, ...d.data() }));
+                    // ترتيب الطلبات محلياً حسب timestamp
+                    myOrders.sort((a, b) => {
+                        const timeA = a.timestamp ? a.timestamp.toDate ? a.timestamp.toDate().getTime() : a.timestamp : 0;
+                        const timeB = b.timestamp ? b.timestamp.toDate ? b.timestamp.toDate().getTime() : b.timestamp : 0;
+                        return timeB - timeA; // تنازلي (الأحدث أولاً)
+                    });
                     if (currentView === 'orders') renderMyOrders();
                 });
             } catch (_) {}
@@ -2699,12 +2788,19 @@
             currentRestName = restName;
             showAllProductsMode = false;
             
-            document.getElementById('restaurants-view').classList.add('hidden');
-            document.getElementById('categories-section').classList.add('hidden');
-            document.getElementById('products-view').classList.remove('hidden');
+            const restaurantsView = document.getElementById('restaurants-view');
+            const categoriesSection = document.getElementById('categories-section');
+            const productsView = document.getElementById('products-view');
             
-            document.getElementById('products-title').innerText = `منتجات ${restName}`;
-            document.getElementById('products-container').innerHTML = getSkeletonHtml(5);
+            if (restaurantsView) restaurantsView.classList.add('hidden');
+            if (categoriesSection) categoriesSection.classList.add('hidden');
+            if (productsView) productsView.classList.remove('hidden');
+            
+            const productsTitle = document.getElementById('products-title');
+            const productsContainer = document.getElementById('products-container');
+            
+            if (productsTitle) productsTitle.innerText = `منتجات ${restName}`;
+            if (productsContainer) productsContainer.innerHTML = getSkeletonHtml(5);
 
             try {
                 const q = query(collection(db, "Products"), where("restId", "==", restId));
@@ -2716,7 +2812,7 @@
                 
                 renderProducts(prods);
             } catch (e) {
-                document.getElementById('products-container').innerHTML = getEmptyStateHtml('❌', 'خطأ', 'حاول مجدداً');
+                if (productsContainer) productsContainer.innerHTML = getEmptyStateHtml('❌', 'خطأ', 'حاول مجدداً');
             }
         };
 
@@ -2742,8 +2838,15 @@
                 const restName = allRestaurants.find(r => r.id === p.restId)?.name || '';
                 const restBadge = !currentRestId ? `<p style="margin:2px 0 0 0;font-size:12px;color:var(--medium-text);">من: ${escapeHtml(restName)}</p>` : '';
                 const isFav = isFavorite('prod', p.id);
+                
+                // فحص وجود الأحجام
+                const hasSizes = p.sizes && Array.isArray(p.sizes) && p.sizes.length > 0;
+                const displayPrice = hasSizes ? 'من ' + getMinPrice(p.sizes) : p.price;
+                const buttonText = hasSizes ? 'اختر الحجم' : '+ إضافة';
+                const clickAction = hasSizes ? `window.openSizeModal('${p.id}', '${escapeHtml(p.name)}', '${img}', '${p.restId}', '${escapeHtml(restName)}')` : `window.addToCart('${p.id}', '${escapeHtml(p.name)}', ${p.price}, '${p.restId}', '${img}')`;
+                
                 container.innerHTML += `
-                    <div class="product-card">
+                    <div class="product-card" onclick="${clickAction}">
                         <div class="product-image-wrap">
                             <img class="product-image" src="${img}" alt="${escapeHtml(p.name)}" onerror="this.style.background='linear-gradient(135deg,#ffedd5,#fed7aa)';this.src='';">
                             <button class="fav-btn ${isFav ? 'filled' : ''}" onclick="event.stopPropagation(); window.toggleFavorite('prod', '${p.id}', '${escapeHtml(p.name)}', '${escapeHtml(img || '')}', '${p.restId}', '${escapeHtml(restName)}')">
@@ -2756,14 +2859,136 @@
                                 ${restBadge}
                             </div>
                             <div class="product-bottom">
-                                <span class="product-price">${p.price} ج.م</span>
-                                <button class="add-btn" onclick="window.addToCart('${p.id}', '${escapeHtml(p.name)}', ${p.price}, '${p.restId}', '${img}')">+ إضافة</button>
+                                <span class="product-price">${displayPrice} ج.م</span>
+                                <button class="add-btn" onclick="event.stopPropagation(); ${clickAction}">${buttonText}</button>
                             </div>
                         </div>
                     </div>
                 `;
             });
         }
+
+        function getMinPrice(sizes) {
+            if (!sizes || sizes.length === 0) return 0;
+            return Math.min(...sizes.map(s => s.price));
+        }
+
+        /* ========== وظائف Modal اختيار الحجم ========== */
+        window.openSizeModal = function(productId, productName, productImage, restId, restName) {
+            const product = allProducts.find(p => p.id === productId);
+            if (!product) return;
+
+            currentProductForSize = { id: productId, name: productName, image: productImage, restId, restName };
+            selectedSize = null;
+
+            document.getElementById('size-modal-image').src = productImage || '';
+            document.getElementById('size-modal-image').onerror = function() {
+                this.style.background = 'linear-gradient(135deg,#ffedd5,#fed7aa)';
+                this.src = '';
+            };
+            document.getElementById('size-modal-title').innerText = productName;
+
+            const sizesContainer = document.getElementById('size-options-container');
+            sizesContainer.innerHTML = '';
+
+            // البحث عن الأحجام في حقول مختلفة
+            let sizesArray = null;
+            if (product.sizes && Array.isArray(product.sizes) && product.sizes.length > 0) {
+                sizesArray = product.sizes;
+            } else if (product.sizeOptions && Array.isArray(product.sizeOptions) && product.sizeOptions.length > 0) {
+                sizesArray = product.sizeOptions;
+            } else if (product.variants && Array.isArray(product.variants) && product.variants.length > 0) {
+                sizesArray = product.variants;
+            }
+
+            if (sizesArray && sizesArray.length > 0) {
+                sizesArray.forEach((size, index) => {
+                    const sizeOption = document.createElement('div');
+                    sizeOption.className = 'size-option';
+                    
+                    // دعم حقول مختلفة للاسم والسعر والوصف
+                    const sizeName = size.name || size.size || size.variant || size.title || 'حجم';
+                    const sizePrice = size.price || size.cost || size.amount || 0;
+                    const sizeDesc = size.description || size.desc || size.details || '';
+                    
+                    sizeOption.innerHTML = `
+                        <div>
+                            <div class="size-name">${escapeHtml(sizeName)}</div>
+                            ${sizeDesc ? `<div class="size-desc">${escapeHtml(sizeDesc)}</div>` : ''}
+                        </div>
+                        <div class="size-price">${sizePrice} ج.م</div>
+                    `;
+                    sizeOption.onclick = () => window.selectSize(index, { name: sizeName, price: sizePrice });
+                    sizesContainer.appendChild(sizeOption);
+                });
+            } else {
+                // إذا لم يكن هناك أحجام، نعرض سعر واحد فقط
+                const sizeOption = document.createElement('div');
+                sizeOption.className = 'size-option';
+                sizeOption.innerHTML = `
+                    <div>
+                        <div class="size-name">حجم عادي</div>
+                    </div>
+                    <div class="size-price">${product.price} ج.م</div>
+                `;
+                sizeOption.onclick = () => window.selectSize(0, { name: 'حجم عادي', price: product.price });
+                sizesContainer.appendChild(sizeOption);
+            }
+
+            document.getElementById('add-to-cart-with-size-btn').disabled = true;
+            document.getElementById('add-to-cart-with-size-btn').innerText = 'اختر الحجم أولاً';
+            document.getElementById('size-modal-overlay').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        };
+
+        window.closeSizeModal = function() {
+            document.getElementById('size-modal-overlay').classList.add('hidden');
+            document.body.style.overflow = '';
+            currentProductForSize = null;
+            selectedSize = null;
+        };
+
+        window.selectSize = function(index, size) {
+            selectedSize = size;
+            
+            // تحديث واجهة الأحجام
+            const sizeOptions = document.querySelectorAll('.size-option');
+            sizeOptions.forEach((opt, i) => {
+                opt.classList.toggle('selected', i === index);
+            });
+
+            // تفعيل زر الإضافة
+            const addBtn = document.getElementById('add-to-cart-with-size-btn');
+            addBtn.disabled = false;
+            addBtn.innerText = `إضافة للسلة - ${size.price} ج.م`;
+            addBtn.onclick = () => window.addToCartWithSize();
+        };
+
+        window.addToCartWithSize = function() {
+            if (!currentProductForSize || !selectedSize) return;
+
+            const cartItemId = `${currentProductForSize.id}_${selectedSize.name}`;
+            const existing = cart.find(item => item.cartItemId === cartItemId);
+
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                cart.push({
+                    cartItemId,
+                    id: currentProductForSize.id,
+                    name: currentProductForSize.name,
+                    price: selectedSize.price,
+                    restId: currentProductForSize.restId,
+                    image: currentProductForSize.image,
+                    size: selectedSize.name,
+                    qty: 1
+                });
+            }
+
+            updateCartBadge();
+            showToast('تمت الإضافة ✅', `${currentProductForSize.name} (${selectedSize.name}) اتضافت للسلة`, 'success');
+            window.closeSizeModal();
+        };
 
         window.closeMenu = function() {
             document.getElementById('products-view').classList.add('hidden');
@@ -2777,11 +3002,42 @@
 
         /* ========== نظام السلة ========== */
         window.addToCart = function(id, name, price, restId, image) {
-            const existing = cart.find(item => item.id === id);
+            const product = allProducts.find(p => p.id === id);
+            
+            // فحص وجود الأحجام بأشكال مختلفة
+            let hasSizes = false;
+            if (product && product.sizes && Array.isArray(product.sizes) && product.sizes.length > 0) {
+                hasSizes = true;
+            } else if (product && product.sizeOptions && Array.isArray(product.sizeOptions) && product.sizeOptions.length > 0) {
+                hasSizes = true;
+            } else if (product && product.variants && Array.isArray(product.variants) && product.variants.length > 0) {
+                hasSizes = true;
+            }
+            
+            if (hasSizes) {
+                // إذا كان المنتج يحتوي على أحجام، نفتح المودال
+                const restName = allRestaurants.find(r => r.id === restId)?.name || '';
+                window.openSizeModal(id, name, image, restId, restName);
+                return;
+            }
+
+            // للمنتجات بدون أحجام، نضيفها مباشرة
+            const cartItemId = `${id}_default`;
+            const existing = cart.find(item => item.cartItemId === cartItemId);
+            
             if (existing) {
                 existing.qty += 1;
             } else {
-                cart.push({ id, name, price, restId, image, qty: 1 });
+                cart.push({ 
+                    cartItemId,
+                    id, 
+                    name, 
+                    price, 
+                    restId, 
+                    image, 
+                    size: null,
+                    qty: 1 
+                });
             }
             updateCartBadge();
             showToast('تمت الإضافة ✅', `${name} اتضافت للسلة`, 'success');
@@ -2841,11 +3097,12 @@
             } else {
                 cartItems.innerHTML = '';
                 cart.forEach((item, index) => {
+                    const sizeBadge = item.size ? `<span style="background:var(--info-light);color:var(--info);padding:2px 8px;border-radius:6px;font-size:11px;font-weight:800;margin-right:6px;">${escapeHtml(item.size)}</span>` : '';
                     cartItems.innerHTML += `
                         <div class="cart-item">
                             <img class="cart-item-img" src="${item.image || ''}" alt="" onerror="this.style.background='linear-gradient(135deg,#ffedd5,#fed7aa)';this.src='';">
                             <div class="cart-item-info">
-                                <h4 class="cart-item-name">${escapeHtml(item.name)}</h4>
+                                <h4 class="cart-item-name">${sizeBadge}${escapeHtml(item.name)}</h4>
                                 <div class="cart-item-price">${item.price} ج.م × ${item.qty} = <strong>${item.price * item.qty} ج.م</strong></div>
                             </div>
                             <div class="cart-qty-ctrl">

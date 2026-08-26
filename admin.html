@@ -1379,13 +1379,18 @@
                                     <input type="text" id="prod-name" placeholder="مثال: لبن كامل الدسم">
                                 </div>
                                 <div class="form-group">
-                                    <label>السعر (ج.م)</label>
+                                    <label>السعر الأساسي (ج.م)</label>
                                     <input type="number" id="prod-price" placeholder="120">
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label>صورة المنتج من الجهاز</label>
+                                <label>صورة المنتج من الجهاز (اختياري)</label>
                                 <input type="file" id="prod-img" accept="image/*">
+                            </div>
+                            <div class="form-group">
+                                <label>الأحجام والأسعار (اختياري)</label>
+                                <div id="sizes-container"></div>
+                                <button class="btn btn-secondary btn-sm" onclick="window.addSizeField()" style="margin-top: 8px;">➕ إضافة حجم</button>
                             </div>
                             <button class="btn btn-primary" onclick="window.addProduct()" style="width: 100%;">💾 حفظ المنتج</button>
                         </div>
@@ -1544,7 +1549,7 @@
                         </div>
                         <div class="stat-card rest">
                             <div class="stat-icon">📍</div>
-                            <div class="stat-label">منطقة القناطر</div>
+                            <div class="stat-label">منطقة القنطرة</div>
                             <div class="stat-value" id="cust-local">0</div>
                             <div class="stat-trend stable">🏘️ عملاء المحلة</div>
                         </div>
@@ -2194,6 +2199,28 @@
             }
         };
 
+        window.addSizeField = function() {
+            const container = document.getElementById('sizes-container');
+            const sizeId = Date.now();
+            const sizeHtml = `
+                <div class="row-2" id="size-row-${sizeId}" style="margin-bottom: 8px;">
+                    <div class="form-group">
+                        <input type="text" id="size-name-${sizeId}" placeholder="الحجم (مثال: صغير، كبير)" style="width: 100%;">
+                    </div>
+                    <div class="form-group">
+                        <input type="number" id="size-price-${sizeId}" placeholder="السعر" style="width: 100%;">
+                    </div>
+                    <button class="btn btn-danger btn-sm" onclick="window.removeSizeField(${sizeId})" style="margin-top: 0;">✕</button>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', sizeHtml);
+        };
+
+        window.removeSizeField = function(sizeId) {
+            const row = document.getElementById(`size-row-${sizeId}`);
+            if (row) row.remove();
+        };
+
         window.addProduct = async function() {
             const restId = document.getElementById('rest-select').value;
             const name = document.getElementById('prod-name').value.trim();
@@ -2202,20 +2229,39 @@
             try {
                 image = await readImageFile('prod-img');
             } catch (error) {
-                showToast('خطأ في الصورة', error.message, 'error');
-                return;
+                // الصورة غير إجبارية - تجاهل الخطأ
             }
 
-            if(!restId || !name || !price || !image) {
-                showToast('بيانات ناقصة!', 'أكمل جميع بيانات المنتج', 'error');
+            if(!restId || !name || !price) {
+                showToast('بيانات ناقصة!', 'أكمل البيانات الأساسية للمنتج', 'error');
                 return;
             }
             
-            await addDoc(collection(db, "Products"), { restId, name, price, image, createdAt: new Date().getTime() });
+            // جمع الأحجام والأسعار
+            const sizes = [];
+            const sizeRows = document.querySelectorAll('[id^="size-row-"]');
+            sizeRows.forEach(row => {
+                const id = row.id.replace('size-row-', '');
+                const sizeName = document.getElementById(`size-name-${id}`).value.trim();
+                const sizePrice = Number(document.getElementById(`size-price-${id}`).value);
+                if (sizeName && sizePrice > 0) {
+                    sizes.push({ name: sizeName, price: sizePrice });
+                }
+            });
+            
+            await addDoc(collection(db, "Products"), { 
+                restId, 
+                name, 
+                price, 
+                image: image || '', 
+                sizes: sizes.length > 0 ? sizes : null,
+                createdAt: new Date().getTime() 
+            });
             showToast('تم الحفظ ✅', `تم إضافة منتج ${name}`, 'success');
             document.getElementById('prod-name').value = '';
             document.getElementById('prod-price').value = '';
             document.getElementById('prod-img').value = '';
+            document.getElementById('sizes-container').innerHTML = '';
         };
 
         function loadProductsForPricing() {

@@ -1248,10 +1248,15 @@
         /* ========== تسجيل الدخول ========== */
         window.loginDriver = async function() {
             const phone = document.getElementById('login-phone').value.replace(/\D/g, '');
+            const pass = document.getElementById('login-pass').value.trim();
             const btn = document.getElementById('login-btn');
 
             if (!validatePhone(phone)) {
                 showToast('رقم غير صحيح!', 'رقم الهاتف لازم يكون 11 رقم ويبدأ بـ 01', 'error');
+                return;
+            }
+            if (!pass) {
+                showToast('بيانات ناقصة!', 'أدخل كلمة المرور', 'error');
                 return;
             }
 
@@ -1259,11 +1264,11 @@
             btn.innerHTML = '<span>⏳ جاري التحقق...</span>';
 
             try {
-                const q = query(collection(db, "Drivers"), where("phone", "==", phone));
+                const q = query(collection(db, "Drivers"), where("phone", "==", phone), where("password", "==", pass));
                 const querySnapshot = await getDocs(q);
 
                 if (querySnapshot.empty) {
-                    showToast('رقم غير مسجل ❌', 'هذا الرقم غير مسجل كطيار. راجع الإدارة.', 'error');
+                    showToast('بيانات خاطئة ❌', 'رقم الهاتف أو كلمة المرور غلط. راجع الإدارة.', 'error');
                     btn.disabled = false;
                     btn.innerHTML = '<span>🚀 تسجيل الدخول</span>';
                     return;
